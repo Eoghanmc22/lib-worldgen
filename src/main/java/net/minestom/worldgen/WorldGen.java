@@ -3,6 +3,7 @@ package net.minestom.worldgen;
 import net.minestom.server.event.instance.InstanceChunkLoadEvent;
 import net.minestom.server.instance.ChunkGenerator;
 import net.minestom.server.instance.Instance;
+import net.minestom.server.instance.InstanceContainer;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.features.PlaceableFeature;
@@ -20,11 +21,11 @@ public class WorldGen implements Context {
 
 	private final LinkedList<Layer> layers = new LinkedList<>();
 	private final List<BiomeGroup> biomeGroups = new ArrayList<>();
-	private final Instance instance;
+	private final InstanceContainer instance;
 	private final Random rng = new Random();
 	private final FutureManager futureManager = new FutureManager(this);
 
-	public WorldGen(Instance instance, WorldGenConfig config) {
+	public WorldGen(InstanceContainer instance, WorldGenConfig config) {
 		this.instance = instance;
 		config.addLayers(this);
 		config.addBiomes(this);
@@ -64,7 +65,7 @@ public class WorldGen implements Context {
 		return biomeGroups;
 	}
 
-	public Instance getInstance() {
+	public InstanceContainer getInstance() {
 		return instance;
 	}
 

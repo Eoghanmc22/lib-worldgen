@@ -141,8 +141,8 @@ public abstract class Layer {
 
 	public final int genBiomesAndCache(final int x, final int z) {
 		if (cache == null) {
-			cache = new Int2IntOpenHashMap(256);
-			cache2 = new Int2LongOpenHashMap(256);
+				cache = new Int2IntOpenHashMap(256);
+				cache2 = new Int2LongOpenHashMap(256);
 		}
 		long pos = (((long) Math.abs(z)) << 32) | Math.abs(x);
 

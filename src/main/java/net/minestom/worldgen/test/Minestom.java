@@ -49,10 +49,15 @@ public class Minestom {
 			event.getPlayer().setGameMode(GameMode.SPECTATOR);
 		});
 
-		System.out.println(Charset.defaultCharset().displayName());
+		MinecraftServer.setChunkViewDistance(15);
 
 		// Start the server on port 25565
 		minecraftServer.start("localhost", 25566);
+		/*for (int x = -16; x < 16; x++) {
+			for (int y = -16; y < 16; y++) {
+				instanceContainer.loadChunk(x,y);
+			}
+		}*/
 	}
 
 	public static class Config implements WorldGenConfig {

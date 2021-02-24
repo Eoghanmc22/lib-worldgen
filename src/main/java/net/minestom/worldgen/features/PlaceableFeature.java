@@ -37,7 +37,8 @@ public abstract class PlaceableFeature {
 			GenerationFuture future = new GenerationFuture(wg, getPersistentId());
 			future.setAll(x, y, z, chunkX, chunkZ);
 
-			final HashMap<ChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> data = generate(x, z, chunkX, chunkZ).getData();
+			final HashMap<ChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> data = generate(x, z, chunkX, chunkZ,
+					new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16)).getData();
 			future.setNeededChunks(new ArrayList<>(data.keySet()));
 			if (!future.runFuture()) {
 				wg.getFutureManager().putFuture(future);
@@ -48,14 +49,14 @@ public abstract class PlaceableFeature {
 	}
 
 	public void place0(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ) {
-		Batch batch = generate(x, z, chunkX, chunkZ);
-		batch.apply(wg, new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16));
+		Batch batch = generate(x, z, chunkX, chunkZ, new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16));
+		batch.apply(wg);
 	}
 
-	private Batch generate(int rX, int rZ, int chunkX, int chunkZ) {
+	private Batch generate(int rX, int rZ, int chunkX, int chunkZ, BlockPosition offset) {
 		ChunkRandom rng = new ChunkRandom(342354, 45452);
 		rng.initChunkSeed(chunkX* 16L + rX, chunkZ* 16L + rZ);
-		Batch batch = new Batch();
+		Batch batch = new Batch(offset);
 		build(batch, rng);
 		return batch;
 	}

@@ -6,6 +6,7 @@ group 'net.minestom'
 version '1.0-SNAPSHOT'
 
 repositories {
+    //mavenLocal()
     mavenCentral()
     maven { url 'https://repo.spongepowered.org/maven' }
     maven { url 'https://libraries.minecraft.net' }
@@ -14,5 +15,6 @@ repositories {
 
 dependencies {
     implementation 'com.github.Minestom:Minestom:2843da6b26'
-    implementation 'com.github.Eoghanmc22:worldgen-commons:80fad932cf'
+    //implementation 'net.minestom:worldgen-commons:1.0-SNAPSHOT'
+    implementation 'com.github.Eoghanmc22:worldgen-commons:3403abb36a'
 }

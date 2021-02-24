@@ -3,6 +3,7 @@ package net.minestom.worldgen.futures;
 import net.minestom.server.data.Data;
 import net.minestom.server.data.SerializableData;
 import net.minestom.server.data.SerializableDataImpl;
+import net.minestom.server.utils.chunk.ChunkUtils;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgenUtils.ChunkPos;
 
@@ -50,7 +51,7 @@ public class GenerationFuture {
 	public boolean runFuture() {
 		boolean loaded = true;
 		for (final ChunkPos cpos2 : getNeededChunks()) {
-			if (!cpos2.toChunk(getFutureManager().getWg()).isLoaded()) {
+			if (!ChunkUtils.isLoaded(cpos2.toChunk(getFutureManager().getWg()))) {
 				loaded = false;
 				break;
 			}
@@ -63,8 +64,7 @@ public class GenerationFuture {
 
 	private void run() {
 		final Generatable runnable = getFutureManager().getGeneratable(persistentRunnableId);
-		if (runnable != null) {
-			state = -1;
+		if (runnable != null && state != 0) {
 			runnable.generate(this, futureManager.getWg(), rX, rY, rZ, chunkX, chunkZ);
 			if (state == -1) {
 				throw new RuntimeException("Runnable never updated the futures state. You need to call 'done' or 'incomplete' at the end of a future");

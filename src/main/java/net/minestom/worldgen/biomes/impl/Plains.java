@@ -12,7 +12,7 @@ import net.minestom.worldgen.features.impl.TreeFeature;
 public class Plains extends BiomeConfig {
 
 	public Plains() {
-		super(Biome.builder().name(NamespaceID.from("test:plains")).build(), 1, new TreeFeature(0.000000000001f, Block.OAK_LEAVES, Block.OAK_LOG));
+		super(Biome.builder().name(NamespaceID.from("test:plains")).build(), 1, new TreeFeature(0.00000001f, Block.OAK_LEAVES, Block.OAK_LOG));
 	}
 
 	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed(0).build();
@@ -21,7 +21,7 @@ public class Plains extends BiomeConfig {
 
 	@Override
 	public int getHeight(int x, int z, int biomeId) {
-		return (int) (64 + noise.getNoise(x,z) * 4 + Math.abs(noise2.getNoise(x,z)) * 3);
+		return (int) (65 + noise.getNoise(x,z) * 4 + Math.abs(noise2.getNoise(x,z)) * 3);
 	}
 
 	@Override
@@ -29,11 +29,18 @@ public class Plains extends BiomeConfig {
 		for (int i = 0; i < height; i++) {
 			batch.setBlock(x, i, z, Block.DIRT);
 		}
-		batch.setBlock(x, height, z, Block.GRASS_BLOCK);
-		if (flowers.getNoise(x,z)+1 < 0.4 && rng.nextFloat() < 0.5) {
-			batch.setBlock(x, height+1, z, Block.DANDELION);
-		} else if (rng.nextFloat() < 0.04) {
-			batch.setBlock(x, height+1, z, Block.GRASS);
+		if (height > 63) {
+			batch.setBlock(x, height, z, Block.GRASS_BLOCK);
+			if (flowers.getNoise(x, z) + 1 < 0.4 && rng.nextFloat() < 0.5) {
+				batch.setBlock(x, height + 1, z, Block.DANDELION);
+			} else if (rng.nextFloat() < 0.04) {
+				batch.setBlock(x, height + 1, z, Block.GRASS);
+			}
+		} else {
+			batch.setBlock(x, height, z, Block.DIRT);
+			for (int i = height+1; i <= 64; i++) {
+				batch.setBlock(x, i, z, Block.WATER);
+			}
 		}
 	}
 

@@ -3,16 +3,16 @@ package net.minestom.worldgen.futures;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgenUtils.ChunkPos;
 
-import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 public class FutureManager {
 
 	private final WorldGen wg;
-	private final Map<String, Generatable> generatableHashMap = new HashMap<>();
-	private final Map<ChunkPos, List<GenerationFuture>> futuresHashMap = new HashMap<>();
+	private final Map<String, Generatable> generatableHashMap = new ConcurrentHashMap<>();
+	private final Map<ChunkPos, List<GenerationFuture>> futuresHashMap = new ConcurrentHashMap<>();
 
 	public FutureManager(WorldGen wg) {
 		this.wg = wg;
@@ -23,7 +23,7 @@ public class FutureManager {
 			if (futuresHashMap.containsKey(cpos)) {
 				futuresHashMap.get(cpos).add(future);
 			} else {
-				List<GenerationFuture> list = new ArrayList<>();
+				List<GenerationFuture> list = new CopyOnWriteArrayList<>();
 				futuresHashMap.put(cpos, list);
 			}
 		}
