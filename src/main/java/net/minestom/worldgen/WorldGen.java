@@ -8,17 +8,20 @@ import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.features.PlaceableFeature;
 import net.minestom.worldgen.futures.FutureManager;
 import net.minestom.worldgen.layers.Layer;
-import net.minestom.worldgen.utils.ChunkPosition;
+import net.minestom.worldgenUtils.ChunkPos;
+import net.minestom.worldgenUtils.Context;
 
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Random;
 
-public class WorldGen {
+public class WorldGen implements Context {
 
 	private final LinkedList<Layer> layers = new LinkedList<>();
 	private final List<BiomeGroup> biomeGroups = new ArrayList<>();
 	private final Instance instance;
+	private final Random rng = new Random();
 	private final FutureManager futureManager = new FutureManager(this);
 
 	public WorldGen(Instance instance, WorldGenConfig config) {
@@ -36,7 +39,7 @@ public class WorldGen {
 			}
 		}
 		instance.addEventCallback(InstanceChunkLoadEvent.class, event -> {
-			getFutureManager().runFuturesForChunk(new ChunkPosition(event.getChunkX(), event.getChunkZ()));
+			getFutureManager().runFuturesForChunk(new ChunkPos(event.getChunkX(), event.getChunkZ()));
 		});
 	}
 
@@ -63,6 +66,11 @@ public class WorldGen {
 
 	public Instance getInstance() {
 		return instance;
+	}
+
+	@Override
+	public Random getRNG() {
+		return rng;
 	}
 
 	public FutureManager getFutureManager() {

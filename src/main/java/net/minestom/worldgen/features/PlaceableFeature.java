@@ -1,17 +1,16 @@
 package net.minestom.worldgen.features;
 
-import net.minestom.server.instance.Chunk;
-import net.minestom.server.instance.batch.BlockBatch;
+import net.minestom.server.utils.BlockPosition;
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.futures.GenerationFuture;
-import net.minestom.worldgen.utils.ChunkPosition;
+import net.minestom.worldgenUtils.Batch;
+import net.minestom.worldgenUtils.ChunkPos;
+import net.minestom.worldgenUtils.SimpleBlockData;
+import net.minestom.worldgenUtils.SimpleBlockPosition;
 
-import java.lang.reflect.Field;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.stream.Collectors;
+import java.util.HashMap;
 
 public abstract class PlaceableFeature {
 
@@ -30,26 +29,16 @@ public abstract class PlaceableFeature {
 						!(rZ + zRadius >= 16 || rZ - zRadius < 0);
 	}
 
-	public boolean place(WorldGen wg, int rX, int rY, int rZ, int chunkX, int chunkZ) {
-		boolean fits = fits(rX, rY, rZ);
+	public boolean place(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ) {
+		boolean fits = fits(x, y, z);
 		if (fits) {
-			place0(wg, rX, rY, rZ, chunkX, chunkZ);
+			place0(wg, x, y, z, chunkX, chunkZ);
 		} else {
-			//this needs to be rewritten lol
 			GenerationFuture future = new GenerationFuture(wg, getPersistentId());
-			future.setAll(rX, rY, rZ, chunkX, chunkZ);
+			future.setAll(x, y, z, chunkX, chunkZ);
 
-			BlockBatch temp =  generate(wg, rX, rY, rZ, chunkX, chunkZ);
-			List<Chunk> chunks = null;
-			try {
-				final Field data = temp.getClass().getDeclaredField("data");
-				data.setAccessible(true);
-				final Map<Chunk, Object> o = (Map<Chunk, Object>) data.get(temp);
-				chunks = new ArrayList<>(o.keySet());
-			} catch (NoSuchFieldException | IllegalAccessException e) {
-				e.printStackTrace();
-			}
-			future.setNeededChunks(chunks.stream().map(ChunkPosition::fromChunk).collect(Collectors.toList()));
+			final HashMap<ChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> data = generate(x, z, chunkX, chunkZ).getData();
+			future.setNeededChunks(new ArrayList<>(data.keySet()));
 			if (!future.runFuture()) {
 				wg.getFutureManager().putFuture(future);
 			}
@@ -58,20 +47,20 @@ public abstract class PlaceableFeature {
 		return fits;
 	}
 
-	public void place0(WorldGen wg, int rX, int rY, int rZ, int chunkX, int chunkZ) {
-		BlockBatch batch = generate(wg, rX, rY, rZ, chunkX, chunkZ);
-		batch.flush(null);
+	public void place0(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ) {
+		Batch batch = generate(x, z, chunkX, chunkZ);
+		batch.apply(wg, new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16));
 	}
 
-	private BlockBatch generate(WorldGen wg, int rX, int rY, int rZ, int chunkX, int chunkZ) {
+	private Batch generate(int rX, int rZ, int chunkX, int chunkZ) {
 		ChunkRandom rng = new ChunkRandom(342354, 45452);
-		rng.initChunkSeed(chunkX*16 + rX, chunkZ*16 + rZ);
-		BlockBatch batch = wg.getInstance().createBlockBatch();
-		build(batch, chunkX*16 + rX, rY, chunkZ*16 + rZ, rng);
+		rng.initChunkSeed(chunkX* 16L + rX, chunkZ* 16L + rZ);
+		Batch batch = new Batch();
+		build(batch, rng);
 		return batch;
 	}
 
-	public abstract void build(BlockBatch batch, int x, int y, int z, ChunkRandom rng);
+	public abstract void build(Batch batch, ChunkRandom rng);
 
 	public abstract String getPersistentId();
 

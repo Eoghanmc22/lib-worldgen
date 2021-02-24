@@ -1,7 +1,7 @@
 package net.minestom.worldgen.futures;
 
 import net.minestom.worldgen.WorldGen;
-import net.minestom.worldgen.utils.ChunkPosition;
+import net.minestom.worldgenUtils.ChunkPos;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -12,14 +12,14 @@ public class FutureManager {
 
 	private final WorldGen wg;
 	private final Map<String, Generatable> generatableHashMap = new HashMap<>();
-	private final Map<ChunkPosition, List<GenerationFuture>> futuresHashMap = new HashMap<>();
+	private final Map<ChunkPos, List<GenerationFuture>> futuresHashMap = new HashMap<>();
 
 	public FutureManager(WorldGen wg) {
 		this.wg = wg;
 	}
 
 	public void putFuture(GenerationFuture future) {
-		for (final ChunkPosition cpos : future.getNeededChunks()) {
+		for (final ChunkPos cpos : future.getNeededChunks()) {
 			if (futuresHashMap.containsKey(cpos)) {
 				futuresHashMap.get(cpos).add(future);
 			} else {
@@ -30,14 +30,14 @@ public class FutureManager {
 	}
 
 	public void removeFuture(GenerationFuture future) {
-		for (final ChunkPosition cpos : future.getNeededChunks()) {
+		for (final ChunkPos cpos : future.getNeededChunks()) {
 			if (futuresHashMap.containsKey(cpos)) {
 				futuresHashMap.get(cpos).remove(future);
 			}
 		}
 	}
 
-	public void runFuturesForChunk(ChunkPosition cpos) {
+	public void runFuturesForChunk(ChunkPos cpos) {
 		if (futuresHashMap.containsKey(cpos)) {
 			for (final GenerationFuture future : futuresHashMap.get(cpos)) {
 				future.runFuture();

@@ -12,7 +12,7 @@ import net.minestom.worldgen.features.impl.TreeFeature;
 public class Plains extends BiomeConfig {
 
 	public Plains() {
-		super(Biome.builder().name(NamespaceID.from("test:desert")).build(), 1, new TreeFeature(0.01f, Block.OAK_LEAVES, Block.OAK_LOG));
+		super(Biome.builder().name(NamespaceID.from("test:plains")).build(), 1, new TreeFeature(0.000000000001f, Block.OAK_LEAVES, Block.OAK_LOG));
 	}
 
 	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed(0).build();

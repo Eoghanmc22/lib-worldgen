@@ -4,14 +4,14 @@ import net.minestom.server.data.Data;
 import net.minestom.server.data.SerializableData;
 import net.minestom.server.data.SerializableDataImpl;
 import net.minestom.worldgen.WorldGen;
-import net.minestom.worldgen.utils.ChunkPosition;
+import net.minestom.worldgenUtils.ChunkPos;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class GenerationFuture {
 
-	private List<ChunkPosition> neededChunks = new ArrayList<>();
+	private List<ChunkPos> neededChunks = new ArrayList<>();
 	private final FutureManager futureManager;
 	private final SerializableData data;
 	private final String persistentRunnableId;
@@ -28,13 +28,14 @@ public class GenerationFuture {
 		this(wg, new SerializableDataImpl(), persistentRunnableId);
 	}
 
+	@SuppressWarnings("ConstantConditions")
 	public GenerationFuture(WorldGen wg, Data serializedData) {
 		this.futureManager = wg.getFutureManager();
 		int length = serializedData.get("neededChunksLength");
 		for (int i = 0; i < length; i++) {
 			int x = serializedData.get("neededChunksX" + i);
 			int z = serializedData.get("neededChunksZ" + i);
-			neededChunks.add(new ChunkPosition(x,z));
+			neededChunks.add(new ChunkPos(x,z));
 		}
 		persistentRunnableId = serializedData.get("persistentRunnableId");
 		data = serializedData.get("data");
@@ -48,7 +49,7 @@ public class GenerationFuture {
 
 	public boolean runFuture() {
 		boolean loaded = true;
-		for (final ChunkPosition cpos2 : getNeededChunks()) {
+		for (final ChunkPos cpos2 : getNeededChunks()) {
 			if (!cpos2.toChunk(getFutureManager().getWg()).isLoaded()) {
 				loaded = false;
 				break;
@@ -76,7 +77,7 @@ public class GenerationFuture {
 		getFutureManager().removeFuture(this);
 	}
 
-	public void incomplete(List<ChunkPosition> neededChunks) {
+	public void incomplete(List<ChunkPos> neededChunks) {
 		state = 1;
 		getFutureManager().removeFuture(this);
 		this.neededChunks = neededChunks;
@@ -88,11 +89,11 @@ public class GenerationFuture {
 		return futureManager;
 	}
 
-	public void setNeededChunks(List<ChunkPosition> neededChunks) {
+	public void setNeededChunks(List<ChunkPos> neededChunks) {
 		this.neededChunks = neededChunks;
 	}
 
-	public List<ChunkPosition> getNeededChunks() {
+	public List<ChunkPos> getNeededChunks() {
 		return neededChunks;
 	}
 
