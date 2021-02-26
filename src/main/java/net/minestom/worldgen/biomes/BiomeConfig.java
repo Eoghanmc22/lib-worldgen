@@ -10,6 +10,8 @@ public abstract class BiomeConfig {
 	private final Biome minestomBiome;
 	private final int variants;
 	private final PlaceableFeature[] features;
+	private int biomeId = -1;
+	private int climateId = -1;
 
 	protected BiomeConfig(Biome minestomBiome, int variants, PlaceableFeature... features) {
 		this.minestomBiome = minestomBiome;
@@ -23,7 +25,7 @@ public abstract class BiomeConfig {
 
 	public abstract int getHeight(int x, int z, int biomeId);
 
-	public abstract void generate(ChunkBatch batch, int x, int z, int height, int biomeId, ChunkRandom rng);
+	public abstract void generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng);
 
 	public PlaceableFeature[] getFeatures() {
 		return features;
@@ -31,6 +33,22 @@ public abstract class BiomeConfig {
 
 	public int getVariants() {
 		return variants;
+	}
+
+	public int getBiomeId() {
+		return biomeId;
+	}
+
+	public void setBiomeId(int biomeId) {
+		this.biomeId = biomeId;
+	}
+
+	public int getClimateId() {
+		return climateId;
+	}
+
+	public void setClimateId(int climateId) {
+		this.climateId = climateId;
 	}
 
 }

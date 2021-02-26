@@ -1,5 +1,6 @@
 package net.minestom.worldgen;
 
+import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minestom.server.event.instance.InstanceChunkLoadEvent;
 import net.minestom.server.instance.ChunkGenerator;
 import net.minestom.server.instance.Instance;
@@ -12,23 +13,21 @@ import net.minestom.worldgen.layers.Layer;
 import net.minestom.worldgenUtils.ChunkPos;
 import net.minestom.worldgenUtils.Context;
 
-import java.util.ArrayList;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Random;
+import java.util.*;
 
 public class WorldGen implements Context {
 
 	private final LinkedList<Layer> layers = new LinkedList<>();
 	private final List<BiomeGroup> biomeGroups = new ArrayList<>();
+	private final BiomeGroup reservedGroup = new BiomeGroup();
 	private final InstanceContainer instance;
 	private final Random rng = new Random();
 	private final FutureManager futureManager = new FutureManager(this);
 
 	public WorldGen(InstanceContainer instance, WorldGenConfig config) {
 		this.instance = instance;
-		config.addLayers(this);
 		config.addBiomes(this);
+		config.addLayers(this);
 		for (final BiomeGroup bg : biomeGroups) {
 			for (final BiomeConfig bc : bg.getBiomes()) {
 				for (final PlaceableFeature feature : bc.getFeatures()) {
@@ -49,7 +48,16 @@ public class WorldGen implements Context {
 	}
 
 	public void addBiomeGroup(BiomeGroup biomeGroup) {
+		int id = biomeGroups.size();
+		for (final BiomeConfig cfg : biomeGroup.getBiomes()) {
+			cfg.setClimateId(id);
+		}
 		biomeGroups.add(biomeGroup);
+	}
+
+	public void addReservedBiome(BiomeConfig biome) {
+		biome.setClimateId(Layer.reservedClimate);
+		reservedGroup.addBiome(biome);
 	}
 
 	public void addLayer(Layer layer) {
@@ -65,6 +73,10 @@ public class WorldGen implements Context {
 		return biomeGroups;
 	}
 
+	public BiomeGroup getBiomeGroup(int climate) {
+		return climate != Layer.reservedClimate ? biomeGroups.get(climate) : reservedGroup;
+	}
+
 	public InstanceContainer getInstance() {
 		return instance;
 	}
@@ -76,6 +88,10 @@ public class WorldGen implements Context {
 
 	public FutureManager getFutureManager() {
 		return futureManager;
+	}
+
+	public BiomeGroup getReservedGroup() {
+		return reservedGroup;
 	}
 
 }

@@ -24,7 +24,7 @@ public class Desert extends BiomeConfig {
 	}
 
 	@Override
-	public void generate(ChunkBatch batch, int x, int z, int height, int biomeId, ChunkRandom rng) {
+	public void generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng) {
 		for (int i = 0; i <= height; i++) {
 			batch.setBlock(x, i, z, Block.SAND);
 		}

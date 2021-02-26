@@ -55,9 +55,12 @@ public abstract class Layer {
 	public final static int climateMask = 0xFF000000;
 	public final static int climateShift = 24;
 
+	public final static int reservedClimate = 0xFF;
+
 	//Cache
 	private Int2IntOpenHashMap cache = null;
 	private Int2LongOpenHashMap cache2 = null;
+	private final Object lock = new Object();
 
 	protected Layer parent;
 	protected WorldGen worldGen;
@@ -84,31 +87,31 @@ public abstract class Layer {
 	}
 
 	public static int getBiomeId(final int id) {
-		return (id & biomeMask) >> biomeShift;
+		return (id & biomeMask) >>> biomeShift;
 	}
 
 	public static int getBiomeVariation(final int id) {
-		return (id & biomeVariationMask) >> biomeVariationShift;
+		return (id & biomeVariationMask) >>> biomeVariationShift;
 	}
 
 	public static boolean hasRivers(final int id) {
-		return ((id & riverBit) >> riverShift) == 1;
+		return ((id & riverBit) >>> riverShift) == 1;
 	}
 
 	public static boolean hasWideRivers(final int id) {
-		return ((id & wideRiverBit) >> wideRiverShift) == 1;
+		return ((id & wideRiverBit) >>> wideRiverShift) == 1;
 	}
 
 	public static boolean isLand(final int id) {
-		return ((id & landBit) >> landShift) == 1;
+		return ((id & landBit) >>> landShift) == 1;
 	}
 
 	public static boolean isIceVariant(final int id) {
-		return ((id & iceBit) >> iceShift) == 1;
+		return ((id & iceBit) >>> iceShift) == 1;
 	}
 
 	public static int getClimate(final int id) {
-		return (id & climateMask) >> climateShift;
+		return (id & climateMask) >>> climateShift;
 	}
 
 	public static int setBiomeId(final int id, final int biomeId) {
@@ -141,8 +144,10 @@ public abstract class Layer {
 
 	public final int genBiomesAndCache(final int x, final int z) {
 		if (cache == null) {
+			synchronized (lock) {
 				cache = new Int2IntOpenHashMap(256);
 				cache2 = new Int2LongOpenHashMap(256);
+			}
 		}
 		long pos = (((long) Math.abs(z)) << 32) | Math.abs(x);
 
@@ -153,12 +158,12 @@ public abstract class Layer {
 			pos |= 1L << 31;
 
 		final int pos2 = Math.abs(z % 16) * 16 + Math.abs(x % 16);
-		synchronized (cache) {
+		synchronized (lock) {
 			if (cache2.containsValue(pos))
 				return cache.get(pos2);
 		}
 		final int biome = genBiomes(x, z);
-		synchronized (cache) {
+		synchronized (lock) {
 			cache.put(pos2, biome);
 			cache2.put(pos2, pos);
 		}

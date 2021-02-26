@@ -38,7 +38,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 		for (int x = 0; x < 20; x++) {
 			for (int z = 0; z < 20; z++) {
 				int id = wg.getLayers().getLast().genBiomes(realX+x+offset, realZ+z+offset);
-				BiomeConfig biome = wg.getBiomeGroups().get(Layer.getClimate(id)).getBiomes().get(Layer.getBiomeId(id));
+				BiomeConfig biome = wg.getBiomeGroup(Layer.getClimate(id)).getBiome(Layer.getBiomeId(id));
 				int height = biome.getHeight(realX+x+offset, realZ+z+offset, id);
 
 				idArray[x][z] = id;
@@ -79,7 +79,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 						(height21/4d + height22/4d + height23/4d + height24/4d)/4d +
 						(height31/4d + height32/4d + height33/4d + height34/4d)/4d +
 						(height41/4d + height42/4d + height43/4d + height44/4d)/4d);
-				biome.generate(batch, realX+x, realZ+z, height, id, rng);
+				biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng);
 
 				for (final PlaceableFeature feature : biome.getFeatures()) {
 					if (rng.nextFloat() < feature.getChance()) {
