@@ -142,6 +142,10 @@ public abstract class Layer {
 		return (climate << climateShift) | (id & ~climateMask);
 	}
 
+	public static boolean cmpBiomeClimate(final int id, final int climate, final int biome) {
+		return getClimate(id) == climate && getBiomeId(id) == biome;
+	}
+
 	public final int genBiomesAndCache(final int x, final int z) {
 		if (cache == null) {
 			synchronized (lock) {
@@ -159,7 +163,7 @@ public abstract class Layer {
 
 		final int pos2 = Math.abs(z % 16) * 16 + Math.abs(x % 16);
 		synchronized (lock) {
-			if (cache2.containsValue(pos))
+			if (cache2.get(pos2) == pos)
 				return cache.get(pos2);
 		}
 		final int biome = genBiomes(x, z);
