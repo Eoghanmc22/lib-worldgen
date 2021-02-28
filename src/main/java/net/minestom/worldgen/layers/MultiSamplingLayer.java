@@ -17,9 +17,9 @@ public abstract class MultiSamplingLayer extends Layer {
 	}
 
 	@Override
-	public final int genBiomes(int x, int z, ChunkRandom r) {
-		return genBiomes(x,z, parent.genBiomesAndCache(adjustX(x+1), adjustZ(z)), parent.genBiomesAndCache(adjustX(x-1), adjustZ(z)),
-				parent.genBiomesAndCache(adjustX(x), adjustZ(z+1)), parent.genBiomesAndCache(adjustX(x), adjustZ(z-1)), parent.genBiomesAndCache(adjustX(x), adjustZ(z)), r);
+	public final int genBiomes(int x, int z, ChunkRandom r, ThreadContext threadContext) {
+		return genBiomes(x,z, parent.genBiomesAndCache(adjustX(x+1), adjustZ(z), threadContext), parent.genBiomesAndCache(adjustX(x-1), adjustZ(z), threadContext),
+				parent.genBiomesAndCache(adjustX(x), adjustZ(z+1), threadContext), parent.genBiomesAndCache(adjustX(x), adjustZ(z-1), threadContext), parent.genBiomesAndCache(adjustX(x), adjustZ(z), threadContext), r);
 	}
 
 	protected abstract int genBiomes(int x, int z, int u, int d, int r, int l, int c, ChunkRandom rng);

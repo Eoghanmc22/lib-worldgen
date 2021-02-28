@@ -7,22 +7,28 @@ import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.PlaceableFeature;
 import net.minestom.worldgen.layers.Layer;
+import net.minestom.worldgen.layers.ThreadContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class ChunkGeneratorImpl implements ChunkGenerator {
 
-	final WorldGen wg;
+	private final WorldGen wg;
+	private final ThreadLocal<ThreadContext> tl;
+	public static final AtomicInteger counter = new AtomicInteger(0);
 
 	public ChunkGeneratorImpl(WorldGen wg) {
 		this.wg = wg;
+		tl = ThreadLocal.withInitial(() -> new ThreadContext(wg.getLayers().size()));
 	}
 
 	@Override
 	public void generateChunkData(@NotNull ChunkBatch batch, int chunkX, int chunkZ) {
+		counter.getAndIncrement();
 		ChunkRandom rng = new ChunkRandom(2200, 0);
 		rng.initChunkSeed(chunkX, chunkZ);
 		int[][] idArray = new int[16+2+2][16+2+2];
@@ -33,11 +39,14 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 		int realX = chunkX*16;
 		int realZ = chunkZ*16;
 
+		final ThreadContext threadContext = tl.get();
+		final Layer biomes = wg.getLayers().getLast();
+
 		// cache data
 		offset = -2;
 		for (int x = 0; x < 20; x++) {
 			for (int z = 0; z < 20; z++) {
-				int id = wg.getLayers().getLast().genBiomes(realX+x+offset, realZ+z+offset);
+				int id = biomes.genBiomes(realX+x+offset, realZ+z+offset, threadContext);
 				BiomeConfig biome = wg.getBiomeGroup(Layer.getClimate(id)).getBiome(Layer.getBiomeId(id));
 				int height = biome.getHeight(realX+x+offset, realZ+z+offset, id);
 

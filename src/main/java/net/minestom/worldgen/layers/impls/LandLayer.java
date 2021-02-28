@@ -2,6 +2,7 @@ package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.layers.Layer;
+import net.minestom.worldgen.layers.ThreadContext;
 
 public class LandLayer extends Layer {
 
@@ -13,9 +14,9 @@ public class LandLayer extends Layer {
 	}
 
 	@Override
-	public int genBiomes(int x, int z, ChunkRandom r) {
+	public int genBiomes(int x, int z, ChunkRandom r, ThreadContext threadContext) {
 		r.initChunkSeed(x,z);
-		return setIsLand(parent.genBiomes(x, z), r.nextFloat() <= landProbability);
+		return setIsLand(parent.genBiomes(x, z, threadContext), r.nextFloat() <= landProbability);
 	}
 
 }

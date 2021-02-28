@@ -2,6 +2,7 @@ package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.layers.Layer;
+import net.minestom.worldgen.layers.ThreadContext;
 
 public class ZoomLayer extends Layer {
 
@@ -18,8 +19,8 @@ public class ZoomLayer extends Layer {
 	}
 
 	@Override
-	public int genBiomes(final int x, final int z, ChunkRandom r) {
-		int biome = parent.genBiomesAndCache(x >> 1, z >> 1);
+	public int genBiomes(final int x, final int z, ChunkRandom r, ThreadContext threadContext) {
+		int biome = parent.genBiomesAndCache(x >> 1, z >> 1, threadContext);
 		r.initChunkSeed(x >> 1 << 1, z >> 1 << 1);
 		final int mode = ((x & 1)<<1) | z & 1;
 		switch (mode) {
@@ -27,17 +28,17 @@ public class ZoomLayer extends Layer {
 				return biome;
 			}
 			case 0b10: {
-				int biome1 = parent.genBiomesAndCache((x+1) >> 1, z >> 1);
+				int biome1 = parent.genBiomesAndCache((x+1) >> 1, z >> 1, threadContext);
 				return r.randomOf2(biome, biome1);
 			}
 			case 0b01: {
-				int biome1 = parent.genBiomesAndCache(x >> 1, (z+1) >> 1);
+				int biome1 = parent.genBiomesAndCache(x >> 1, (z+1) >> 1, threadContext);
 				return r.randomOf2(biome, biome1);
 			}
 			case 0b11: {
-				int biome1 = parent.genBiomesAndCache((x+1) >> 1, z >> 1);
-				int biome2 = parent.genBiomesAndCache(x >> 1, (z+1) >> 1);
-				int biome3 = parent.genBiomesAndCache((x+1) >> 1, (z+1) >> 1);
+				int biome1 = parent.genBiomesAndCache((x+1) >> 1, z >> 1, threadContext);
+				int biome2 = parent.genBiomesAndCache(x >> 1, (z+1) >> 1, threadContext);
+				int biome3 = parent.genBiomesAndCache((x+1) >> 1, (z+1) >> 1, threadContext);
 				return fuzzy ? r.getRandomInArray(biome, biome1, biome2, biome3) : r.getRandomOf4(biome, biome1, biome2, biome3);
 			}
 		}

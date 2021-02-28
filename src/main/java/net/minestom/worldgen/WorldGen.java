@@ -1,10 +1,12 @@
 package net.minestom.worldgen;
 
 import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.instance.InstanceChunkLoadEvent;
 import net.minestom.server.instance.ChunkGenerator;
 import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
+import net.minestom.server.utils.time.TimeUnit;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.features.PlaceableFeature;
@@ -41,6 +43,10 @@ public class WorldGen implements Context {
 		instance.addEventCallback(InstanceChunkLoadEvent.class, event -> {
 			getFutureManager().runFuturesForChunk(new ChunkPos(event.getChunkX(), event.getChunkZ()));
 		});
+		MinecraftServer.getSchedulerManager().buildTask(() -> {
+			final int i = ChunkGeneratorImpl.counter.getAndSet(0);
+			System.out.println(i + " chunks per second");
+		}).repeat(1, TimeUnit.SECOND).schedule();
 	}
 
 	public ChunkGenerator getChunkGenerator() {

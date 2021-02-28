@@ -17,7 +17,7 @@ repositories {
 dependencies {
     implementation 'com.github.Minestom:Minestom:2843da6b26'
     //implementation 'net.minestom:worldgen-commons:1.0-SNAPSHOT'
-    implementation 'com.github.Eoghanmc22:worldgen-commons:3403abb36a'
+    implementation 'com.github.Eoghanmc22:worldgen-commons:2ab583c448'
 }
 
 

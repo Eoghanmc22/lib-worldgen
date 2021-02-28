@@ -4,6 +4,7 @@ import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.layers.Layer;
+import net.minestom.worldgen.layers.ThreadContext;
 
 import java.util.List;
 
@@ -14,8 +15,8 @@ public class BiomeLayer extends Layer {
 	}
 
 	@Override
-	public int genBiomes(final int x, final int z, ChunkRandom r) {
-		final int biome = parent.genBiomes(x, z);
+	public int genBiomes(final int x, final int z, ChunkRandom r, ThreadContext threadContext) {
+		final int biome = parent.genBiomes(x, z, threadContext);
 		if (!isLand(biome))
 			return biome;
 		final List<BiomeGroup> biomeGroups = worldGen.getBiomeGroups();
