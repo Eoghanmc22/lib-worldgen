@@ -4,6 +4,7 @@ import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.features.PlaceableFeature;
+import net.minestom.worldgen.utils.MutLong;
 
 public abstract class BiomeConfig {
 
@@ -23,9 +24,9 @@ public abstract class BiomeConfig {
 		return minestomBiome;
 	}
 
-	public abstract int getHeight(int x, int z, int biomeId);
+	public abstract int getHeight(int x, int z, int biomeId, MutLong data);
 
-	public abstract void generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng);
+	public abstract void generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data);
 
 	public PlaceableFeature[] getFeatures() {
 		return features;

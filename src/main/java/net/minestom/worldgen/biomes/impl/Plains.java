@@ -8,6 +8,7 @@ import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.impl.TreeFeature;
+import net.minestom.worldgen.utils.MutLong;
 
 public class Plains extends BiomeConfig {
 
@@ -20,12 +21,12 @@ public class Plains extends BiomeConfig {
 	JNoise flowers = JNoise.newBuilder().openSimplex().setFrequency(0.1).setSeed(2).build();
 
 	@Override
-	public int getHeight(int x, int z, int biomeId) {
+	public int getHeight(int x, int z, int biomeId, MutLong data) {
 		return (int) (65 + noise.getNoise(x,z) * 4 + Math.abs(noise2.getNoise(x,z)) * 3);
 	}
 
 	@Override
-	public void generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng) {
+	public void generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data) {
 		for (int i = 0; i < height; i++) {
 			batch.setBlock(x, i, z, Block.DIRT);
 		}

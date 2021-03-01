@@ -8,6 +8,7 @@ import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.PlaceableFeature;
 import net.minestom.worldgen.layers.Layer;
 import net.minestom.worldgen.layers.ThreadContext;
+import net.minestom.worldgen.utils.MutLong;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -34,6 +35,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 		int[][] idArray = new int[16+2+2][16+2+2];
 		int[][] heightArray = new int[16+2+2][16+2+2];
 		BiomeConfig[][] biomeArray = new BiomeConfig[16+2+2][16+2+2];
+		MutLong[][] dataArray = new MutLong[16+2+2][16+2+2];
 		int offset;
 
 		int realX = chunkX*16;
@@ -48,11 +50,13 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 			for (int z = 0; z < 20; z++) {
 				int id = biomes.genBiomes(realX+x+offset, realZ+z+offset, threadContext);
 				BiomeConfig biome = wg.getBiomeGroup(Layer.getClimate(id)).getBiome(Layer.getBiomeId(id));
-				int height = biome.getHeight(realX+x+offset, realZ+z+offset, id);
+				MutLong data = new MutLong();
+				int height = biome.getHeight(realX+x+offset, realZ+z+offset, id, data);
 
 				idArray[x][z] = id;
 				heightArray[x][z] = height;
 				biomeArray[x][z] = biome;
+				dataArray[x][z] = data;
 			}
 		}
 
@@ -62,6 +66,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 			for (int z = 0; z < 16; z++) {
 				int id = idArray[x+offset][z+offset];
 				BiomeConfig biome = biomeArray[x+offset][z+offset];
+				MutLong data = dataArray[x+offset][z+offset];
 
 				// Bilinear interpolation https://en.wikipedia.org/wiki/Bilinear_interpolation
 				int height11 = heightArray[x+offset-2][z+offset-2];
@@ -88,7 +93,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 						(height21/4d + height22/4d + height23/4d + height24/4d)/4d +
 						(height31/4d + height32/4d + height33/4d + height34/4d)/4d +
 						(height41/4d + height42/4d + height43/4d + height44/4d)/4d);
-				biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng);
+				biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, data);
 
 				for (final PlaceableFeature feature : biome.getFeatures()) {
 					if (rng.nextFloat() < feature.getChance()) {
