@@ -26,7 +26,7 @@ public abstract class BiomeConfig {
 
 	public abstract int getHeight(int x, int z, int biomeId, MutLong data);
 
-	public abstract boolean generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data);
+	public abstract boolean generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, boolean genStructures);
 
 	public PlaceableFeature[] getFeatures() {
 		return features;
