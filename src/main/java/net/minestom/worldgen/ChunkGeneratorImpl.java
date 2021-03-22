@@ -93,13 +93,13 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 						(height21/4d + height22/4d + height23/4d + height24/4d)/4d +
 						(height31/4d + height32/4d + height33/4d + height34/4d)/4d +
 						(height41/4d + height42/4d + height43/4d + height44/4d)/4d);
-				biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, data);
-
-				for (final PlaceableFeature feature : biome.getFeatures()) {
-					if (rng.nextFloat() < feature.getChance()) {
-						int finalX = x;
-						int finalZ = z;
-						ChunkBatch.BLOCK_BATCH_POOL.execute(() -> feature.place(wg, finalX, height+1, finalZ, chunkX, chunkZ));
+				if (biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, data)) {
+					for (final PlaceableFeature feature : biome.getFeatures()) {
+						if (rng.nextFloat() < feature.getChance()) {
+							int finalX = x;
+							int finalZ = z;
+							ChunkBatch.BLOCK_BATCH_POOL.execute(() -> feature.place(wg, finalX, height + 1, finalZ, chunkX, chunkZ));
+						}
 					}
 				}
 			}
