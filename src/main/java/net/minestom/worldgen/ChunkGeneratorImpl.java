@@ -93,7 +93,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 						(height21/4d + height22/4d + height23/4d + height24/4d)/4d +
 						(height31/4d + height32/4d + height33/4d + height34/4d)/4d +
 						(height41/4d + height42/4d + height43/4d + height44/4d)/4d);
-				if (biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, data, true)) {
+				if ((biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, data, 0) & BiomeConfig.GENERATE_STRUCTURES) == BiomeConfig.GENERATE_STRUCTURES) {
 					for (final PlaceableFeature feature : biome.getFeatures()) {
 						if (rng.nextFloat() < feature.getChance()) {
 							int finalX = x;
@@ -110,7 +110,25 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 
 	@Override
 	public void fillBiomes(@NotNull Biome[] biomes, int chunkX, int chunkZ) {
-		Arrays.fill(biomes, Biome.PLAINS);
+		int realX = chunkX*16;
+		int realZ = chunkZ*16;
+		final ThreadContext threadContext = tl.get();
+		final Layer biomeSource = wg.getLayers().getLast();
+		Biome[][] biomeArray = new Biome[4][4];
+		for (int x = 0; x < 4; x++) {
+			for (int z = 0; z < 4; z++) {
+				int id = biomeSource.genBiomes(realX+x*4, realZ+x*4, threadContext);
+				BiomeConfig biome = wg.getBiomeGroup(Layer.getClimate(id)).getBiome(Layer.getBiomeId(id));
+				biomeArray[x][z] = biome.getMinestomBiome();
+			}
+		}
+		for (int y = 0; y < 64; y++) {
+			for (int z = 0; z < 4; z++) {
+				for (int x = 0; x < 4; x++) {
+					biomes[y*16+z*4+x] = biomeArray[x][z];
+				}
+			}
+		}
 	}
 
 	@Nullable

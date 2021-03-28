@@ -12,7 +12,7 @@ import net.minestom.worldgen.utils.MutLong;
 public class RedDesert extends BiomeConfig {
 
 	public RedDesert() {
-		super(Biome.builder().name(NamespaceID.from("test:desert")).build(), 1);
+		super(Biome.builder().name(NamespaceID.from("test:red_desert")).build(), 1);
 	}
 
 	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.02).setSeed(0).build();
@@ -25,7 +25,7 @@ public class RedDesert extends BiomeConfig {
 	}
 
 	@Override
-	public boolean generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, boolean genStructures) {
+	public int generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, int genStructures) {
 		for (int i = 0; i <= height; i++) {
 			batch.setBlock(x, i, z, Block.RED_SAND);
 		}
@@ -36,7 +36,7 @@ public class RedDesert extends BiomeConfig {
 				batch.setBlock(x, height+i, z, Block.CACTUS);
 			}
 		}
-		return true;
+		return genStructures | GENERATE_STRUCTURES;
 	}
 
 }

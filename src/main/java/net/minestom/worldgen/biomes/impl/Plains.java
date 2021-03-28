@@ -26,7 +26,7 @@ public class Plains extends BiomeConfig {
 	}
 
 	@Override
-	public boolean generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, boolean genStructures) {
+	public int generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, int genStructures) {
 		for (int i = 0; i < height; i++) {
 			batch.setBlock(x, i, z, Block.DIRT);
 		}
@@ -43,7 +43,7 @@ public class Plains extends BiomeConfig {
 				batch.setBlock(x, i, z, Block.WATER);
 			}
 		}
-		return true;
+		return genStructures | GENERATE_STRUCTURES;
 	}
 
 }

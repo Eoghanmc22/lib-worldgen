@@ -1,5 +1,6 @@
 package net.minestom.worldgen.biomes;
 
+import net.minestom.server.MinecraftServer;
 import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
@@ -18,6 +19,7 @@ public abstract class BiomeConfig {
 		this.minestomBiome = minestomBiome;
 		this.variants = variants;
 		this.features = features;
+		MinecraftServer.getBiomeManager().addBiome(minestomBiome);
 	}
 
 	public Biome getMinestomBiome() {
@@ -26,7 +28,9 @@ public abstract class BiomeConfig {
 
 	public abstract int getHeight(int x, int z, int biomeId, MutLong data);
 
-	public abstract boolean generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, boolean genStructures);
+	public static final int GENERATE_STRUCTURES             = 0b0000_0000_0000_0000_0000_0000_0000_0001;
+
+	public abstract int generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, int genStructures);
 
 	public PlaceableFeature[] getFeatures() {
 		return features;

@@ -25,7 +25,7 @@ public class Desert extends BiomeConfig {
 	}
 
 	@Override
-	public boolean generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, boolean genStructures) {
+	public int generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, int genStructures) {
 		for (int i = 0; i <= height; i++) {
 			batch.setBlock(x, i, z, Block.SAND);
 		}
@@ -36,7 +36,7 @@ public class Desert extends BiomeConfig {
 				batch.setBlock(x, height+i, z, Block.CACTUS);
 			}
 		}
-		return true;
+		return genStructures | GENERATE_STRUCTURES;
 	}
 
 }
