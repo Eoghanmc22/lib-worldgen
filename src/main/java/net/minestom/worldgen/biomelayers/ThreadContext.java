@@ -1,4 +1,4 @@
-package net.minestom.worldgen.layers;
+package net.minestom.worldgen.biomelayers;
 
 public final class ThreadContext {
 

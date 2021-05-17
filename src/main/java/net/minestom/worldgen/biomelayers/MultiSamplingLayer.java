@@ -1,4 +1,4 @@
-package net.minestom.worldgen.layers;
+package net.minestom.worldgen.biomelayers;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;

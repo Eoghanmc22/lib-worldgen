@@ -1,8 +1,8 @@
-package net.minestom.worldgen.layers.impls;
+package net.minestom.worldgen.biomelayers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
-import net.minestom.worldgen.layers.MultiSamplingLayer;
+import net.minestom.worldgen.biomelayers.MultiSamplingLayer;
 
 public class SmoothLayer extends MultiSamplingLayer {
 

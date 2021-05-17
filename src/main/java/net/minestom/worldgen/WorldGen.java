@@ -9,7 +9,7 @@ import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.features.PlaceableFeature;
 import net.minestom.worldgen.futures.FutureManager;
-import net.minestom.worldgen.layers.Layer;
+import net.minestom.worldgen.biomelayers.Layer;
 import net.minestom.worldgenUtils.ChunkPos;
 import net.minestom.worldgenUtils.Context;
 

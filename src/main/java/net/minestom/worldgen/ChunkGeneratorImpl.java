@@ -6,13 +6,12 @@ import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.PlaceableFeature;
-import net.minestom.worldgen.layers.Layer;
-import net.minestom.worldgen.layers.ThreadContext;
+import net.minestom.worldgen.biomelayers.Layer;
+import net.minestom.worldgen.biomelayers.ThreadContext;
 import net.minestom.worldgen.utils.MutLong;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Arrays;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 

@@ -1,9 +1,9 @@
-package net.minestom.worldgen.layers.impls;
+package net.minestom.worldgen.biomelayers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
-import net.minestom.worldgen.layers.Layer;
-import net.minestom.worldgen.layers.ThreadContext;
+import net.minestom.worldgen.biomelayers.Layer;
+import net.minestom.worldgen.biomelayers.ThreadContext;
 
 public class BiomeGroupLayer extends Layer {
 

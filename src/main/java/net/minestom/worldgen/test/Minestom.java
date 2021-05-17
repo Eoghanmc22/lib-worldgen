@@ -15,9 +15,7 @@ import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.biomes.impl.Desert;
 import net.minestom.worldgen.biomes.impl.Plains;
 import net.minestom.worldgen.biomes.impl.RedDesert;
-import net.minestom.worldgen.layers.impls.*;
-
-import java.util.concurrent.CompletableFuture;
+import net.minestom.worldgen.biomelayers.impls.*;
 
 public class Minestom {
 
