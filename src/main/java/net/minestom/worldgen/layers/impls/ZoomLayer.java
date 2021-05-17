@@ -1,6 +1,7 @@
 package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.layers.Layer;
 import net.minestom.worldgen.layers.ThreadContext;
 
@@ -8,13 +9,13 @@ public class ZoomLayer extends Layer {
 
 	final boolean fuzzy;
 
-	public ZoomLayer(final long baseSeed) {
-		super(baseSeed);
+	public ZoomLayer(WorldGen wg, final long baseSeed) {
+		super(wg, baseSeed);
 		this.fuzzy = false;
 	}
 
-	public ZoomLayer(final long baseSeed, final boolean fuzzy) {
-		super(baseSeed);
+	public ZoomLayer(WorldGen wg, final long baseSeed, final boolean fuzzy) {
+		super(wg, baseSeed);
 		this.fuzzy = fuzzy;
 	}
 

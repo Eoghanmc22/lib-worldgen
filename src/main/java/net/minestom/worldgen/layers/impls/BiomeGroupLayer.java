@@ -1,13 +1,14 @@
 package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.layers.Layer;
 import net.minestom.worldgen.layers.ThreadContext;
 
 public class BiomeGroupLayer extends Layer {
 
-	public BiomeGroupLayer(final long baseSeed) {
-		super(baseSeed);
+	public BiomeGroupLayer(WorldGen wg, final long baseSeed) {
+		super(wg, baseSeed);
 	}
 
 	@Override

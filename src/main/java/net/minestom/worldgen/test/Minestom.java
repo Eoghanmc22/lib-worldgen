@@ -8,7 +8,6 @@ import net.minestom.server.event.player.PlayerLoginEvent;
 import net.minestom.server.event.player.PlayerSpawnEvent;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.instance.InstanceManager;
-import net.minestom.server.network.packet.server.play.ChangeGameStatePacket;
 import net.minestom.server.utils.Position;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.WorldGenConfig;
@@ -18,7 +17,7 @@ import net.minestom.worldgen.biomes.impl.Plains;
 import net.minestom.worldgen.biomes.impl.RedDesert;
 import net.minestom.worldgen.layers.impls.*;
 
-import java.nio.charset.Charset;
+import java.util.concurrent.CompletableFuture;
 
 public class Minestom {
 
@@ -31,7 +30,7 @@ public class Minestom {
 		InstanceContainer instanceContainer = instanceManager.createInstanceContainer();
 
 		//lib worldgen setup
-		WorldGen wg = new WorldGen(instanceContainer, new Config());
+		WorldGen wg = new WorldGen(instanceContainer, new Config(), 12321);
 
 		// Set the ChunkGenerator
 		instanceContainer.setChunkGenerator(wg.getChunkGenerator());
@@ -64,30 +63,30 @@ public class Minestom {
 
 		@Override
 		public void addLayers(WorldGen wg) {
-			int i = 2000;
-			wg.addLayer(new BaseLayer());
-			wg.addLayer(new LandLayer(i++, 1f));
-			wg.addLayer(new BiomeGroupLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new SmoothLayer(i++));
-			wg.addLayer(new BiomeLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
-			wg.addLayer(new ZoomLayer(i++));
+			long i = 2000;
+			wg.addLayer(new BaseLayer(wg));
+			wg.addLayer(new LandLayer(wg, i++, 1f));
+			wg.addLayer(new BiomeGroupLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new SmoothLayer(wg, i++));
+			wg.addLayer(new BiomeLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addLayer(new ZoomLayer(wg, i++));
 		}
 
 		@Override
 		public void addBiomes(WorldGen wg) {
 			BiomeGroup group = new BiomeGroup();
-			group.addBiome(new Desert());
-			group.addBiome(new RedDesert());
+			group.addBiome(new Desert(wg, 2000));
+			group.addBiome(new RedDesert(wg, 2005));
 			wg.addBiomeGroup(group);
 			group = new BiomeGroup();
-			group.addBiome(new Plains());
+			group.addBiome(new Plains(wg, 2010));
 			wg.addBiomeGroup(group);
 		}
 

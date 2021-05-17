@@ -1,10 +1,8 @@
 package net.minestom.worldgen;
 
-import it.unimi.dsi.fastutil.ints.IntOpenHashSet;
 import net.minestom.server.MinecraftServer;
 import net.minestom.server.event.instance.InstanceChunkLoadEvent;
 import net.minestom.server.instance.ChunkGenerator;
-import net.minestom.server.instance.Instance;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.utils.time.TimeUnit;
 import net.minestom.worldgen.biomes.BiomeConfig;
@@ -16,6 +14,8 @@ import net.minestom.worldgenUtils.ChunkPos;
 import net.minestom.worldgenUtils.Context;
 
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class WorldGen implements Context {
 
@@ -25,9 +25,13 @@ public class WorldGen implements Context {
 	private final InstanceContainer instance;
 	private final Random rng = new Random();
 	private final FutureManager futureManager = new FutureManager(this);
+	private final AtomicInteger layerIdCounter = new AtomicInteger(0);
+	private final Map<Class<? extends BiomeConfig>, BiomeConfig> biomeMap = new ConcurrentHashMap<>();
+	private final long seed;
 
-	public WorldGen(InstanceContainer instance, WorldGenConfig config) {
+	public WorldGen(InstanceContainer instance, WorldGenConfig config, long seed) {
 		this.instance = instance;
+		this.seed = ChunkRandom.scramble(seed);
 		config.addBiomes(this);
 		config.addLayers(this);
 		for (final BiomeGroup bg : biomeGroups) {
@@ -57,6 +61,7 @@ public class WorldGen implements Context {
 		int id = biomeGroups.size();
 		for (final BiomeConfig cfg : biomeGroup.getBiomes()) {
 			cfg.setClimateId(id);
+			biomeMap.put(cfg.getClass(), cfg);
 		}
 		biomeGroups.add(biomeGroup);
 	}
@@ -64,10 +69,10 @@ public class WorldGen implements Context {
 	public void addReservedBiome(BiomeConfig biome) {
 		biome.setClimateId(Layer.reservedClimate);
 		reservedGroup.addBiome(biome);
+		biomeMap.put(biome.getClass(), biome);
 	}
 
 	public void addLayer(Layer layer) {
-		layer.setWorldGen(this);
 		layers.add(layer);
 	}
 
@@ -87,6 +92,10 @@ public class WorldGen implements Context {
 		return instance;
 	}
 
+	public BiomeConfig getBiome(Class<? extends BiomeConfig> clazz) {
+		return biomeMap.get(clazz);
+	}
+
 	@Override
 	public Random getRNG() {
 		return rng;
@@ -100,4 +109,11 @@ public class WorldGen implements Context {
 		return reservedGroup;
 	}
 
+	public AtomicInteger getLayerIdCounter() {
+		return layerIdCounter;
+	}
+
+	public long getSeed() {
+		return seed;
+	}
 }

@@ -1,12 +1,13 @@
 package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.layers.MultiSamplingLayer;
 
 public class SmoothLayer extends MultiSamplingLayer {
 
-	public SmoothLayer(final long baseSeed) {
-		super(baseSeed);
+	public SmoothLayer(WorldGen wg, final long baseSeed) {
+		super(wg, baseSeed);
 	}
 
 	@Override

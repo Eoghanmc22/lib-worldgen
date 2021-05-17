@@ -1,12 +1,7 @@
 package net.minestom.worldgen.layers;
 
-import it.unimi.dsi.fastutil.ints.Int2IntOpenHashMap;
-import it.unimi.dsi.fastutil.ints.Int2LongOpenHashMap;
-import it.unimi.dsi.fastutil.longs.Long2IntOpenHashMap;
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
-
-import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * Abstract class for layer.
@@ -18,7 +13,6 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @author Eoghanmc22
  */
 
-//Some code taken from OTG
 public abstract class Layer {
 
 	/*
@@ -46,8 +40,7 @@ public abstract class Layer {
 	public final static int dataMask = 0xFF00_0000;
 	public final static int dataShift = 24;
 
-	private static final AtomicInteger idCounter = new AtomicInteger(0);
-	private final int id = idCounter.getAndIncrement();
+	private int id;
 
 	protected Layer parent;
 	protected WorldGen worldGen;
@@ -56,13 +49,12 @@ public abstract class Layer {
 	private final long baseSeed;
 	private long worldSeed;
 
-	public Layer(final long baseSeed) {
+	public Layer(WorldGen wg, final long baseSeed) {
 		this.baseSeed = baseSeed;
-	}
 
-	// it is required to call this before this layer is used but it is called for you in WorldGen#addLayer();
-	public void setWorldGen(WorldGen wg) {
 		this.worldGen = wg;
+		initWorldGenSeed(wg.getSeed());
+		id = wg.getLayerIdCounter().getAndIncrement();
 		if (wg.getLayers().size() > 0)
 			this.parent = wg.getLayers().getLast();
 		else
@@ -125,8 +117,7 @@ public abstract class Layer {
 
 	protected abstract int genBiomes(int x, int z, ChunkRandom r, ThreadContext threadContext);
 
-	//Start otg
-	public void initWorldGenSeed(final long worldSeed) {
+	private void initWorldGenSeed(final long worldSeed) {
 		if (parent != null)
 			parent.initWorldGenSeed(worldSeed);
 

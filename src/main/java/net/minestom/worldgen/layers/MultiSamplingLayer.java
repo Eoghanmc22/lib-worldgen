@@ -1,11 +1,12 @@
 package net.minestom.worldgen.layers;
 
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 
 public abstract class MultiSamplingLayer extends Layer {
 
-	public MultiSamplingLayer(long baseSeed) {
-		super(baseSeed);
+	public MultiSamplingLayer(WorldGen wg, long baseSeed) {
+		super(wg, baseSeed);
 	}
 
 	protected int adjustX(int x) {

@@ -1,6 +1,6 @@
 package net.minestom.worldgen;
 
-//TODO Code taken from otg needs to be re-written
+//code taken from OTG
 public class ChunkRandom {
 
 	long baseSeed;
@@ -26,7 +26,7 @@ public class ChunkRandom {
 		return new ChunkRandom(baseSeed, worldSeed, chunkSeed);
 	}
 
-	private static long getScrambledBaseSeed(final long baseSeed) {
+	public static long scramble(final long baseSeed) {
 		long scrambledBaseSeed = baseSeed;
 		scrambledBaseSeed *= (scrambledBaseSeed * 6364136223846793005L + 1442695040888963407L);
 		scrambledBaseSeed += baseSeed;
@@ -37,8 +37,8 @@ public class ChunkRandom {
 		return scrambledBaseSeed;
 	}
 
-	protected static long getScrambledWorldSeed(final long baseSeed, final long worldSeed) {
-		final long scrambledBaseSeed = getScrambledBaseSeed(baseSeed);
+	public static long scramble(final long baseSeed, final long worldSeed) {
+		final long scrambledBaseSeed = scramble(baseSeed);
 		long scrambledWorldSeed = worldSeed;
 		scrambledWorldSeed *= (scrambledWorldSeed * 6364136223846793005L + 1442695040888963407L);
 		scrambledWorldSeed += scrambledBaseSeed;
@@ -51,7 +51,7 @@ public class ChunkRandom {
 
 
 	public void setWorldSeed(final long worldSeed) {
-		this.worldSeed = getScrambledWorldSeed(baseSeed, worldSeed);
+		this.worldSeed = scramble(baseSeed, worldSeed);
 	}
 
 	public void initChunkSeed(final long x, final long z) {

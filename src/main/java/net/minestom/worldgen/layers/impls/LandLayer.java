@@ -1,6 +1,7 @@
 package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.layers.Layer;
 import net.minestom.worldgen.layers.ThreadContext;
 
@@ -8,8 +9,8 @@ public class LandLayer extends Layer {
 
 	final float landProbability;
 
-	public LandLayer(long baseSeed, float landProbability) {
-		super(baseSeed);
+	public LandLayer(WorldGen wg, long baseSeed, float landProbability) {
+		super(wg, baseSeed);
 		this.landProbability = landProbability;
 	}
 

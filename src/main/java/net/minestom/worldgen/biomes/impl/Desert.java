@@ -6,18 +6,19 @@ import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.utils.MutLong;
 
 public class Desert extends BiomeConfig {
 
-	public Desert() {
-		super(Biome.builder().name(NamespaceID.from("test:desert")).build(), 1);
+	public Desert(WorldGen wg, int salt) {
+		super(wg, Biome.builder().name(NamespaceID.from("test:desert")).build(), 1, salt);
 	}
 
-	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.02).setSeed(0).build();
-	JNoise noise2 = JNoise.newBuilder().openSimplex().setFrequency(0.5).setSeed(1).build();
-	JNoise noise3 = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed(2).build();
+	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.02).setSeed((int) (seed + 1)).build();
+	JNoise noise2 = JNoise.newBuilder().openSimplex().setFrequency(0.5).setSeed((int) (seed + 2)).build();
+	JNoise noise3 = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed((int) (seed + 3)).build();
 
 	@Override
 	public int getHeight(int x, int z, int biomeId, MutLong data) {

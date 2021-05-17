@@ -6,19 +6,20 @@ import net.minestom.server.instance.block.Block;
 import net.minestom.server.utils.NamespaceID;
 import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.impl.TreeFeature;
 import net.minestom.worldgen.utils.MutLong;
 
 public class Plains extends BiomeConfig {
 
-	public Plains() {
-		super(Biome.builder().name(NamespaceID.from("test:plains")).build(), 1, new TreeFeature(0.00000001f, Block.OAK_LEAVES, Block.OAK_LOG));
+	public Plains(WorldGen wg, int salt) {
+		super(wg, Biome.builder().name(NamespaceID.from("test:plains")).build(), 1, salt, new TreeFeature(0.00000001f, Block.OAK_LEAVES, Block.OAK_LOG));
 	}
 
-	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed(0).build();
-	JNoise noise2 = JNoise.newBuilder().openSimplex().setFrequency(0.05).setSeed(1).build();
-	JNoise flowers = JNoise.newBuilder().openSimplex().setFrequency(0.1).setSeed(2).build();
+	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed((int) (seed + 1)).build();
+	JNoise noise2 = JNoise.newBuilder().openSimplex().setFrequency(0.05).setSeed((int) (seed + 2)).build();
+	JNoise flowers = JNoise.newBuilder().openSimplex().setFrequency(0.1).setSeed((int) (seed + 3)).build();
 
 	@Override
 	public int getHeight(int x, int z, int biomeId, MutLong data) {

@@ -1,6 +1,7 @@
 package net.minestom.worldgen.layers.impls;
 
 import net.minestom.worldgen.ChunkRandom;
+import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.layers.Layer;
@@ -10,8 +11,8 @@ import java.util.List;
 
 public class BiomeLayer extends Layer {
 
-	public BiomeLayer(final long baseSeed) {
-		super(baseSeed);
+	public BiomeLayer(WorldGen wg, final long baseSeed) {
+		super(wg, baseSeed);
 	}
 
 	@Override
