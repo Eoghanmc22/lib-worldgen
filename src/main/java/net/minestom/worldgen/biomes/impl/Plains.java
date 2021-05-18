@@ -18,9 +18,9 @@ public class Plains extends BiomeConfig {
 		super(wg, Biome.builder().name(NamespaceID.from("test:plains")).build(), 1, salt, new TreeFeature(0.00000001f, Block.OAK_LEAVES, Block.OAK_LOG));
 	}
 
-	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed((int) (seed + 1)).build();
-	JNoise noise2 = JNoise.newBuilder().openSimplex().setFrequency(0.05).setSeed((int) (seed + 2)).build();
-	JNoise flowers = JNoise.newBuilder().openSimplex().setFrequency(0.1).setSeed((int) (seed + 3)).build();
+	JNoise noise = JNoise.newBuilder().superSimplex().setFrequency(0.01).setSeed((int) (seed + 1)).build();
+	JNoise noise2 = JNoise.newBuilder().superSimplex().setFrequency(0.05).setSeed((int) (seed + 2)).build();
+	JNoise flowers = JNoise.newBuilder().superSimplex().setFrequency(0.1).setSeed((int) (seed + 3)).build();
 
 	@Override
 	public int getHeight(int x, int z, int biomeId) {

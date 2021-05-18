@@ -9,15 +9,20 @@ version '1.0-SNAPSHOT'
 repositories {
     //mavenLocal()
     mavenCentral()
-    maven { url 'https://repo.spongepowered.org/maven' }
-    maven { url 'https://libraries.minecraft.net' }
     maven { url 'https://jitpack.io' }
+    maven {
+        name 'sponge'
+        url 'https://repo.spongepowered.org/maven'
+    }
+    maven {
+        url "https://repo.velocitypowered.com/snapshots/"
+    }
 }
 
 dependencies {
-    implementation 'com.github.Minestom:Minestom:7edc508662'
+    implementation 'com.github.Minestom:Minestom:cc97062dfa'
     //implementation 'net.minestom:worldgen-commons:1.0-SNAPSHOT'
-    implementation 'com.github.Eoghanmc22:worldgen-commons:655412e0d6'
+    implementation 'com.github.Eoghanmc22:worldgen-commons:f0912daaaf'
 }
 
 

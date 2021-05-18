@@ -17,9 +17,9 @@ public class Desert extends BiomeConfig {
 		super(wg, Biome.builder().name(NamespaceID.from("test:desert")).build(), 1, salt);
 	}
 
-	JNoise noise = JNoise.newBuilder().openSimplex().setFrequency(0.02).setSeed((int) (seed + 1)).build();
-	JNoise noise2 = JNoise.newBuilder().openSimplex().setFrequency(0.5).setSeed((int) (seed + 2)).build();
-	JNoise noise3 = JNoise.newBuilder().openSimplex().setFrequency(0.01).setSeed((int) (seed + 3)).build();
+	JNoise noise = JNoise.newBuilder().superSimplex().setFrequency(0.02).setSeed((int) (seed + 1)).build();
+	JNoise noise2 = JNoise.newBuilder().superSimplex().setFrequency(0.5).setSeed((int) (seed + 2)).build();
+	JNoise noise3 = JNoise.newBuilder().superSimplex().setFrequency(0.01).setSeed((int) (seed + 3)).build();
 
 	@Override
 	public int getHeight(int x, int z, int biomeId) {
