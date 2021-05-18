@@ -34,7 +34,7 @@ public abstract class BiomeConfig {
 
 	public abstract int getHeight(final int x, final int z, final int biomeId);
 
-	public abstract int buildSurface(final int x, final int z, int genStructures, final int biomeId, final Column column, final TerrainThreadContext ctx);
+	public abstract int buildSurface(final int x, final int z, int genStructures, final int biomeId, final Column column, final ChunkRandom r, final TerrainThreadContext ctx);
 
 	public static final int GENERATE_STRUCTURES = 0b0000_0000_0000_0000_0000_0000_0000_0001;
 

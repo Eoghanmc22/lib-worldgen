@@ -28,7 +28,7 @@ public class Plains extends BiomeConfig {
 	}
 
 	@Override
-	public int buildSurface(int x, int z, int genStructures, int biomeId, Column column, TerrainThreadContext ctx) {
+	public int buildSurface(int x, int z, int genStructures, int biomeId, Column column, final ChunkRandom r, TerrainThreadContext ctx) {
 		for (int y = (int) column.getHeightMap()-4; y < (int) column.getHeightMap(); y++) {
 			column.setBlock(Block.DIRT, y);
 		}

@@ -27,7 +27,7 @@ public class RedDesert extends BiomeConfig {
 	}
 
 	@Override
-	public int buildSurface(int x, int z, int genStructures, int biomeId, Column column, TerrainThreadContext ctx) {
+	public int buildSurface(int x, int z, int genStructures, int biomeId, Column column, final ChunkRandom r, TerrainThreadContext ctx) {
 		for (int y = (int) column.getHeightMap()-8; y <= (int) column.getHeightMap()-4; y++) {
 			column.setBlock(Block.RED_SANDSTONE, y);
 		}
