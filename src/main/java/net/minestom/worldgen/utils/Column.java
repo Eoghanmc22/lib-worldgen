@@ -14,7 +14,7 @@ public class Column {
     private double heightMap = 0;
 
     public final void setBlock(final Block block, final int y) {
-        blocks[y] = block.getBlockId();
+        setBlock(block.getBlockId(), y);
     }
 
     public final void setBlock(final short block, final int y) {

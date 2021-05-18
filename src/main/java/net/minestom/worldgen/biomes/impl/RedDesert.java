@@ -8,6 +8,8 @@ import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.biomes.BiomeConfig;
+import net.minestom.worldgen.terrain.TerrainThreadContext;
+import net.minestom.worldgen.utils.Column;
 
 public class RedDesert extends BiomeConfig {
 
@@ -22,6 +24,17 @@ public class RedDesert extends BiomeConfig {
 	@Override
 	public int getHeight(int x, int z, int biomeId) {
 		return (int) (64 + noise.getNoise(x,z) * 5 + Math.abs(noise2.getNoise(x,z)) * 1.4 + noise3.getNoise(x,z) * 7);
+	}
+
+	@Override
+	public int buildSurface(int x, int z, int genStructures, int biomeId, Column column, TerrainThreadContext ctx) {
+		for (int y = (int) column.getHeightMap()-8; y <= (int) column.getHeightMap()-4; y++) {
+			column.setBlock(Block.RED_SANDSTONE, y);
+		}
+		for (int y = (int) column.getHeightMap()-4; y <= (int) column.getHeightMap(); y++) {
+			column.setBlock(Block.RED_SAND, y);
+		}
+		return genStructures;
 	}
 
 }

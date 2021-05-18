@@ -18,7 +18,7 @@ public abstract class TerrainLayer {
 
 		this.wg = wg;
 		initWorldGenSeed(wg.getSeed());
-		if (wg.getBiomeLayers().size() > 0)
+		if (wg.getTerrainLayers().size() > 0)
 			this.parent = wg.getTerrainLayers().getLast();
 		else
 			this.parent = null;

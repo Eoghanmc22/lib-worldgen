@@ -45,8 +45,8 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 		for (int x = 0; x < 16; x++) {
 			for (int z = 0; z < 16; z++) {
 				final Column column = new Column();
-				final int genStructures = terrainLayer.genTerrain(realX+x, realZ+z, 0, column, threadContext);
-				for (int y = 0; y < column.getMaxHeight(); y++) {
+				final int genStructures = terrainLayer.genTerrain(realX+x, realZ+z, -1, column, threadContext);
+				for (int y = 0; y <= column.getMaxHeight(); y++) {
 					batch.setBlockStateId(x, y, z, column.getBlock(y));
 				}
 				if ((genStructures & BiomeConfig.GENERATE_STRUCTURES) == BiomeConfig.GENERATE_STRUCTURES) {

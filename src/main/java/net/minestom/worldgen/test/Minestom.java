@@ -16,6 +16,11 @@ import net.minestom.worldgen.biomes.impl.Desert;
 import net.minestom.worldgen.biomes.impl.Plains;
 import net.minestom.worldgen.biomes.impl.RedDesert;
 import net.minestom.worldgen.biomegen.impls.*;
+import net.minestom.worldgen.heightmap.impls.InterpolationHeightMapLayer;
+import net.minestom.worldgen.terrain.impls.DemoTerrainLayer;
+import net.minestom.worldgen.terrain.impls.SurfaceTerrainLayer;
+
+import java.util.concurrent.CountDownLatch;
 
 public class Minestom {
 
@@ -50,11 +55,25 @@ public class Minestom {
 
 		// Start the server on port 25565
 		minecraftServer.start("localhost", 25566);
-		/*for (int x = -16; x < 16; x++) {
-			for (int y = -16; y < 16; y++) {
-				instanceContainer.loadChunk(x,y);
+
+		int range = 100;
+		int count = range*range*4;
+		long start = System.nanoTime();
+		CountDownLatch latch = new CountDownLatch(count);
+
+		for (int x = -range; x < range; x++) {
+			for (int y = -range; y < range; y++) {
+				instanceContainer.loadChunk(x, y, chunk -> latch.countDown());
 			}
-		}*/
+		}
+		try {
+			latch.await();
+			long time = System.nanoTime() - start;
+			double chunks = (double) count/(time/1000000000d);
+			System.out.println("chunks/s: " + chunks);
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+		}
 	}
 
 	public static class Config implements WorldGenConfig {
@@ -78,12 +97,13 @@ public class Minestom {
 
 		@Override
 		public void addHeightMapLayers(WorldGen wg) {
-
+			wg.addHeightLayer(new InterpolationHeightMapLayer(wg));
 		}
 
 		@Override
 		public void addTerrainLayers(WorldGen wg) {
-
+			wg.addTerrainLayer(new DemoTerrainLayer(wg, 2354234));
+			wg.addTerrainLayer(new SurfaceTerrainLayer(wg));
 		}
 
 		@Override

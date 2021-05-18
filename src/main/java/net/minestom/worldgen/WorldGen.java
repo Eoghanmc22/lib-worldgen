@@ -27,11 +27,6 @@ public class WorldGen implements Context {
 	private final LinkedList<BiomeLayer> biomeLayers = new LinkedList<>();
 	private final LinkedList<HeightMapLayer> heightMapLayers = new LinkedList<>();
 	private final LinkedList<TerrainLayer> terrainLayers = new LinkedList<>();
-	{
-		biomeLayers.add(new BaseBiomeLayer(this));
-		heightMapLayers.add(new BaseHeightMapLayer(this));
-		terrainLayers.add(new BaseTerrainLayer(this));
-	}
 	private final List<BiomeGroup> biomeGroups = new ArrayList<>();
 	private final BiomeGroup reservedGroup = new BiomeGroup();
 	private final InstanceContainer instance;
@@ -45,8 +40,15 @@ public class WorldGen implements Context {
 	public WorldGen(InstanceContainer instance, WorldGenConfig config, long seed) {
 		this.instance = instance;
 		this.seed = ChunkRandom.scramble(seed);
+
+		biomeLayers.add(new BaseBiomeLayer(this));
+		heightMapLayers.add(new BaseHeightMapLayer(this));
+		terrainLayers.add(new BaseTerrainLayer(this));
+
 		config.addBiomes(this);
 		config.addBiomeLayers(this);
+		config.addHeightMapLayers(this);
+		config.addTerrainLayers(this);
 		for (final BiomeGroup bg : biomeGroups) {
 			for (final BiomeConfig bc : bg.getBiomes()) {
 				for (final PlaceableFeature feature : bc.getFeatures()) {
@@ -91,6 +93,10 @@ public class WorldGen implements Context {
 
 	public void addHeightLayer(HeightMapLayer heightMapLayer) {
 		heightMapLayers.add(heightMapLayer);
+	}
+
+	public void addTerrainLayer(TerrainLayer terrainLayer) {
+		terrainLayers.add(terrainLayer);
 	}
 
 	public LinkedList<BiomeLayer> getBiomeLayers() {

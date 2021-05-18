@@ -20,7 +20,7 @@ public abstract class HeightMapLayer {
 		this.wg = wg;
 		initWorldGenSeed(wg.getSeed());
 		id = wg.getHeightMapLayerIdCounter().getAndIncrement();
-		if (wg.getBiomeLayers().size() > 0)
+		if (wg.getHeightMapLayers().size() > 0)
 			this.parent = wg.getHeightMapLayers().getLast();
 		else
 			this.parent = null;

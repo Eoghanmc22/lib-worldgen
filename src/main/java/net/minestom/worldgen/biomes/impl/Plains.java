@@ -9,6 +9,8 @@ import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.impl.TreeFeature;
+import net.minestom.worldgen.terrain.TerrainThreadContext;
+import net.minestom.worldgen.utils.Column;
 
 public class Plains extends BiomeConfig {
 
@@ -23,6 +25,15 @@ public class Plains extends BiomeConfig {
 	@Override
 	public int getHeight(int x, int z, int biomeId) {
 		return (int) (65 + noise.getNoise(x,z) * 4 + Math.abs(noise2.getNoise(x,z)) * 3);
+	}
+
+	@Override
+	public int buildSurface(int x, int z, int genStructures, int biomeId, Column column, TerrainThreadContext ctx) {
+		for (int y = (int) column.getHeightMap()-4; y < (int) column.getHeightMap(); y++) {
+			column.setBlock(Block.DIRT, y);
+		}
+		column.setBlock(Block.GRASS_BLOCK, (int) column.getHeightMap());
+		return genStructures;
 	}
 
 }
