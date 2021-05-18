@@ -9,7 +9,9 @@ import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.features.PlaceableFeature;
 import net.minestom.worldgen.futures.FutureManager;
-import net.minestom.worldgen.biomelayers.Layer;
+import net.minestom.worldgen.biomegen.BiomeLayer;
+import net.minestom.worldgen.heightmap.HeightMapLayer;
+import net.minestom.worldgen.terrain.TerrainLayer;
 import net.minestom.worldgenUtils.ChunkPos;
 import net.minestom.worldgenUtils.Context;
 
@@ -17,15 +19,18 @@ import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.atomic.AtomicInteger;
 
+// biome gen -> height map gen -> terrain gen -> lazy population
 public class WorldGen implements Context {
-
-	private final LinkedList<Layer> layers = new LinkedList<>();
+	private final LinkedList<BiomeLayer> biomeLayers = new LinkedList<>();
+	private final LinkedList<HeightMapLayer> heightMapLayers = new LinkedList<>();
+	private final LinkedList<TerrainLayer> terrainLayers = new LinkedList<>();
 	private final List<BiomeGroup> biomeGroups = new ArrayList<>();
 	private final BiomeGroup reservedGroup = new BiomeGroup();
 	private final InstanceContainer instance;
 	private final Random rng = new Random();
 	private final FutureManager futureManager = new FutureManager(this);
-	private final AtomicInteger layerIdCounter = new AtomicInteger(0);
+	private final AtomicInteger biomeLayerIdCounter = new AtomicInteger(0);
+	private final AtomicInteger heightMapLayerIdCounter = new AtomicInteger(0);
 	private final Map<Class<? extends BiomeConfig>, BiomeConfig> biomeMap = new ConcurrentHashMap<>();
 	private final long seed;
 
@@ -33,7 +38,7 @@ public class WorldGen implements Context {
 		this.instance = instance;
 		this.seed = ChunkRandom.scramble(seed);
 		config.addBiomes(this);
-		config.addLayers(this);
+		config.addBiomeLayers(this);
 		for (final BiomeGroup bg : biomeGroups) {
 			for (final BiomeConfig bc : bg.getBiomes()) {
 				for (final PlaceableFeature feature : bc.getFeatures()) {
@@ -67,17 +72,29 @@ public class WorldGen implements Context {
 	}
 
 	public void addReservedBiome(BiomeConfig biome) {
-		biome.setClimateId(Layer.reservedClimate);
+		biome.setClimateId(BiomeLayer.reservedClimate);
 		reservedGroup.addBiome(biome);
 		biomeMap.put(biome.getClass(), biome);
 	}
 
-	public void addLayer(Layer layer) {
-		layers.add(layer);
+	public void addBiomeLayer(BiomeLayer biomeLayer) {
+		biomeLayers.add(biomeLayer);
 	}
 
-	public LinkedList<Layer> getLayers() {
-		return layers;
+	public void addHeightLayer(HeightMapLayer heightMapLayer) {
+		heightMapLayers.add(heightMapLayer);
+	}
+
+	public LinkedList<BiomeLayer> getBiomeLayers() {
+		return biomeLayers;
+	}
+
+	public LinkedList<HeightMapLayer> getHeightMapLayers() {
+		return heightMapLayers;
+	}
+
+	public LinkedList<TerrainLayer> getTerrainLayers() {
+		return terrainLayers;
 	}
 
 	public List<BiomeGroup> getBiomeGroups() {
@@ -85,7 +102,7 @@ public class WorldGen implements Context {
 	}
 
 	public BiomeGroup getBiomeGroup(int climate) {
-		return climate != Layer.reservedClimate ? biomeGroups.get(climate) : reservedGroup;
+		return climate != BiomeLayer.reservedClimate ? biomeGroups.get(climate) : reservedGroup;
 	}
 
 	public InstanceContainer getInstance() {
@@ -109,8 +126,11 @@ public class WorldGen implements Context {
 		return reservedGroup;
 	}
 
-	public AtomicInteger getLayerIdCounter() {
-		return layerIdCounter;
+	public AtomicInteger getBiomeLayerIdCounter() {
+		return biomeLayerIdCounter;
+	}
+	public AtomicInteger getHeightMapLayerIdCounter() {
+		return heightMapLayerIdCounter;
 	}
 
 	public long getSeed() {

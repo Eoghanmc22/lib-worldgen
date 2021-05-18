@@ -15,7 +15,7 @@ import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.biomes.impl.Desert;
 import net.minestom.worldgen.biomes.impl.Plains;
 import net.minestom.worldgen.biomes.impl.RedDesert;
-import net.minestom.worldgen.biomelayers.impls.*;
+import net.minestom.worldgen.biomegen.impls.*;
 
 public class Minestom {
 
@@ -60,21 +60,31 @@ public class Minestom {
 	public static class Config implements WorldGenConfig {
 
 		@Override
-		public void addLayers(WorldGen wg) {
+		public void addBiomeLayers(WorldGen wg) {
 			long i = 2000;
-			wg.addLayer(new BaseLayer(wg));
-			wg.addLayer(new LandLayer(wg, i++, 1f));
-			wg.addLayer(new BiomeGroupLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new SmoothLayer(wg, i++));
-			wg.addLayer(new BiomeLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
-			wg.addLayer(new ZoomLayer(wg, i++));
+			wg.addBiomeLayer(new BaseBiomeLayer(wg));
+			wg.addBiomeLayer(new LandBiomeLayer(wg, i++, 1f));
+			wg.addBiomeLayer(new BiomeGroupBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new SmoothBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new BiomesBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));
+		}
+
+		@Override
+		public void addHeightMapLayers(WorldGen wg) {
+
+		}
+
+		@Override
+		public void addTerrainLayers(WorldGen wg) {
+
 		}
 
 		@Override

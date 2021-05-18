@@ -1,10 +1,10 @@
-package net.minestom.worldgen.biomelayers;
+package net.minestom.worldgen.biomegen;
 
-public final class ThreadContext {
+public final class BiomeThreadContext {
 
 	public final BiomeCache[] cache;
 
-	public ThreadContext(final int layers) {
+	public BiomeThreadContext(final int layers) {
 		cache = new BiomeCache[layers];
 		for (int i = 0; i < layers; i++) {
 			cache[i] = new BiomeCache();

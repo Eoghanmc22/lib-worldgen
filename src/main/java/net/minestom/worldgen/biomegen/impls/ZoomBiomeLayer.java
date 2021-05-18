@@ -1,26 +1,26 @@
-package net.minestom.worldgen.biomelayers.impls;
+package net.minestom.worldgen.biomegen.impls;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
-import net.minestom.worldgen.biomelayers.Layer;
-import net.minestom.worldgen.biomelayers.ThreadContext;
+import net.minestom.worldgen.biomegen.BiomeLayer;
+import net.minestom.worldgen.biomegen.BiomeThreadContext;
 
-public class ZoomLayer extends Layer {
+public class ZoomBiomeLayer extends BiomeLayer {
 
 	final boolean fuzzy;
 
-	public ZoomLayer(WorldGen wg, final long baseSeed) {
+	public ZoomBiomeLayer(final WorldGen wg, final long baseSeed) {
 		super(wg, baseSeed);
 		this.fuzzy = false;
 	}
 
-	public ZoomLayer(WorldGen wg, final long baseSeed, final boolean fuzzy) {
+	public ZoomBiomeLayer(final WorldGen wg, final long baseSeed, final boolean fuzzy) {
 		super(wg, baseSeed);
 		this.fuzzy = fuzzy;
 	}
 
 	@Override
-	public int genBiomes(final int x, final int z, ChunkRandom r, ThreadContext threadContext) {
+	public int genBiomes(final int x, final int z, final ChunkRandom r, final BiomeThreadContext threadContext) {
 		int biome = parent.genBiomesAndCache(x >> 1, z >> 1, threadContext);
 		r.initChunkSeed(x >> 1 << 1, z >> 1 << 1);
 		final int mode = ((x & 1)<<1) | z & 1;

@@ -6,9 +6,8 @@ import net.minestom.server.instance.batch.ChunkBatch;
 import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.PlaceableFeature;
-import net.minestom.worldgen.biomelayers.Layer;
-import net.minestom.worldgen.biomelayers.ThreadContext;
-import net.minestom.worldgen.utils.MutLong;
+import net.minestom.worldgen.biomegen.BiomeLayer;
+import net.minestom.worldgen.biomegen.BiomeThreadContext;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -18,12 +17,12 @@ import java.util.concurrent.atomic.AtomicInteger;
 public class ChunkGeneratorImpl implements ChunkGenerator {
 
 	private final WorldGen wg;
-	private final ThreadLocal<ThreadContext> tl;
+	private final ThreadLocal<BiomeThreadContext> tl;
 	public static final AtomicInteger counter = new AtomicInteger(0);
 
 	public ChunkGeneratorImpl(WorldGen wg) {
 		this.wg = wg;
-		tl = ThreadLocal.withInitial(() -> new ThreadContext(wg.getLayers().size()));
+		tl = ThreadLocal.withInitial(() -> new BiomeThreadContext(wg.getBiomeLayers().size()));
 	}
 
 	@Override
@@ -34,28 +33,25 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 		int[][] idArray = new int[16+2+2][16+2+2];
 		int[][] heightArray = new int[16+2+2][16+2+2];
 		BiomeConfig[][] biomeArray = new BiomeConfig[16+2+2][16+2+2];
-		MutLong[][] dataArray = new MutLong[16+2+2][16+2+2];
 		int offset;
 
 		int realX = chunkX*16;
 		int realZ = chunkZ*16;
 
-		final ThreadContext threadContext = tl.get();
-		final Layer biomes = wg.getLayers().getLast();
+		final BiomeThreadContext threadContext = tl.get();
+		final BiomeLayer biomes = wg.getBiomeLayers().getLast();
 
 		// cache data
 		offset = -2;
 		for (int x = 0; x < 20; x++) {
 			for (int z = 0; z < 20; z++) {
 				int id = biomes.genBiomes(realX+x+offset, realZ+z+offset, threadContext);
-				BiomeConfig biome = wg.getBiomeGroup(Layer.getClimate(id)).getBiome(Layer.getBiomeId(id));
-				MutLong data = new MutLong();
-				int height = biome.getHeight(realX+x+offset, realZ+z+offset, id, data);
+				BiomeConfig biome = wg.getBiomeGroup(BiomeLayer.getClimate(id)).getBiome(BiomeLayer.getBiomeId(id));
+				int height = biome.getHeight(realX+x+offset, realZ+z+offset, id);
 
 				idArray[x][z] = id;
 				heightArray[x][z] = height;
 				biomeArray[x][z] = biome;
-				dataArray[x][z] = data;
 			}
 		}
 
@@ -65,7 +61,6 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 			for (int z = 0; z < 16; z++) {
 				int id = idArray[x+offset][z+offset];
 				BiomeConfig biome = biomeArray[x+offset][z+offset];
-				MutLong data = dataArray[x+offset][z+offset];
 
 				// Bilinear interpolation https://en.wikipedia.org/wiki/Bilinear_interpolation
 				int height11 = heightArray[x+offset-2][z+offset-2];
@@ -92,7 +87,7 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 						(height21/4d + height22/4d + height23/4d + height24/4d)/4d +
 						(height31/4d + height32/4d + height33/4d + height34/4d)/4d +
 						(height41/4d + height42/4d + height43/4d + height44/4d)/4d);
-				if ((biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, data, 0) & BiomeConfig.GENERATE_STRUCTURES) == BiomeConfig.GENERATE_STRUCTURES) {
+				if ((biome.generate(batch, x, z, height, chunkX, chunkZ, id, rng, 0) & BiomeConfig.GENERATE_STRUCTURES) == BiomeConfig.GENERATE_STRUCTURES) {
 					for (final PlaceableFeature feature : biome.getFeatures()) {
 						if (rng.nextFloat() < feature.getChance()) {
 							int finalX = x;
@@ -111,13 +106,13 @@ public class ChunkGeneratorImpl implements ChunkGenerator {
 	public void fillBiomes(@NotNull Biome[] biomes, int chunkX, int chunkZ) {
 		int realX = chunkX*16;
 		int realZ = chunkZ*16;
-		final ThreadContext threadContext = tl.get();
-		final Layer biomeSource = wg.getLayers().getLast();
+		final BiomeThreadContext threadContext = tl.get();
+		final BiomeLayer biomeSource = wg.getBiomeLayers().getLast();
 		Biome[][] biomeArray = new Biome[4][4];
 		for (int x = 0; x < 4; x++) {
 			for (int z = 0; z < 4; z++) {
 				int id = biomeSource.genBiomes(realX+x*4, realZ+x*4, threadContext);
-				BiomeConfig biome = wg.getBiomeGroup(Layer.getClimate(id)).getBiome(Layer.getBiomeId(id));
+				BiomeConfig biome = wg.getBiomeGroup(BiomeLayer.getClimate(id)).getBiome(BiomeLayer.getBiomeId(id));
 				biomeArray[x][z] = biome.getMinestomBiome();
 			}
 		}

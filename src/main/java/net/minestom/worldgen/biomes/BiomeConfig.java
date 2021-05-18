@@ -6,7 +6,6 @@ import net.minestom.server.world.biomes.Biome;
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.features.PlaceableFeature;
-import net.minestom.worldgen.utils.MutLong;
 
 public abstract class BiomeConfig {
 
@@ -31,11 +30,9 @@ public abstract class BiomeConfig {
 		return minestomBiome;
 	}
 
-	public abstract int getHeight(int x, int z, int biomeId, MutLong data);
+	public abstract int getHeight(int x, int z, int biomeId);
 
 	public static final int GENERATE_STRUCTURES = 0b0000_0000_0000_0000_0000_0000_0000_0001;
-
-	public abstract int generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, int genStructures);
 
 	public PlaceableFeature[] getFeatures() {
 		return features;

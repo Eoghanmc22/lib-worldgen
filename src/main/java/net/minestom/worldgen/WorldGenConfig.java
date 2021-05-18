@@ -2,7 +2,9 @@ package net.minestom.worldgen;
 
 public interface WorldGenConfig {
 
-	void addLayers(WorldGen wg);
+	void addBiomeLayers(WorldGen wg);
+	void addHeightMapLayers(WorldGen wg);
+	void addTerrainLayers(WorldGen wg);
 
 	void addBiomes(WorldGen wg);
 }

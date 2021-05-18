@@ -1,10 +1,10 @@
-package net.minestom.worldgen.biomelayers;
+package net.minestom.worldgen.biomegen;
 
 import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
 
 /**
- * Abstract class for layer.
+ * Abstract class for biome layers.
  * <p>
  * This class will have the randoms and contain the bit masks and bit shifts for data encoded into the "biome ids"
  * which really are ints that have a sector for for the biome id sent to the client
@@ -13,7 +13,7 @@ import net.minestom.worldgen.WorldGen;
  * @author Eoghanmc22
  */
 
-public abstract class Layer {
+public abstract class BiomeLayer {
 
 	/*
 	Biome ints don't just contain the biome id.
@@ -40,29 +40,25 @@ public abstract class Layer {
 	public final static int dataMask = 0xFF00_0000;
 	public final static int dataShift = 24;
 
-	private int id;
+	private final int id;
 
-	protected Layer parent;
-	protected WorldGen worldGen;
+	protected final BiomeLayer parent;
+	protected final WorldGen wg;
 
 	//Seeds for randoms
 	private final long baseSeed;
 	private long worldSeed;
 
-	public Layer(WorldGen wg, final long baseSeed) {
+	public BiomeLayer(final WorldGen wg, final long baseSeed) {
 		this.baseSeed = baseSeed;
 
-		this.worldGen = wg;
+		this.wg = wg;
 		initWorldGenSeed(wg.getSeed());
-		id = wg.getLayerIdCounter().getAndIncrement();
-		if (wg.getLayers().size() > 0)
-			this.parent = wg.getLayers().getLast();
+		id = wg.getBiomeLayerIdCounter().getAndIncrement();
+		if (wg.getBiomeLayers().size() > 0)
+			this.parent = wg.getBiomeLayers().getLast();
 		else
 			this.parent = null;
-	}
-
-	public static int mod(final int a, final int b) {
-		return (a % b + b) % b;
 	}
 
 	public static int getBiomeId(final int id) {
@@ -101,9 +97,9 @@ public abstract class Layer {
 		return getClimate(id) == climate && getBiomeId(id) == biome;
 	}
 
-	public final int genBiomesAndCache(final int x, final int z, ThreadContext threadContext) {
-		ThreadContext.BiomeCache cache = threadContext.cache[id];
-		final ThreadContext.BiomeCacheEntry entry = cache.cache[x & 0xF][z & 0xF];
+	public final int genBiomesAndCache(final int x, final int z, final BiomeThreadContext threadContext) {
+		BiomeThreadContext.BiomeCache cache = threadContext.cache[id];
+		final BiomeThreadContext.BiomeCacheEntry entry = cache.cache[x & 0xF][z & 0xF];
 
 		if (entry.isValid(x, z)) {
 			return entry.get();
@@ -111,11 +107,11 @@ public abstract class Layer {
 		return entry.set(x, z, genBiomes(x, z, threadContext));
 	}
 
-	public final int genBiomes(final int x, final int z, ThreadContext threadContext) {
+	public final int genBiomes(final int x, final int z, final BiomeThreadContext threadContext) {
 		return genBiomes(x, z, new ChunkRandom(baseSeed, worldSeed), threadContext);
 	}
 
-	protected abstract int genBiomes(int x, int z, ChunkRandom r, ThreadContext threadContext);
+	protected abstract int genBiomes(final int x, final int z, final ChunkRandom r, final BiomeThreadContext threadContext);
 
 	private void initWorldGenSeed(final long worldSeed) {
 		if (parent != null)

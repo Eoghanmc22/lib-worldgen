@@ -9,7 +9,6 @@ import net.minestom.worldgen.ChunkRandom;
 import net.minestom.worldgen.WorldGen;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.features.impl.TreeFeature;
-import net.minestom.worldgen.utils.MutLong;
 
 public class Plains extends BiomeConfig {
 
@@ -22,29 +21,8 @@ public class Plains extends BiomeConfig {
 	JNoise flowers = JNoise.newBuilder().openSimplex().setFrequency(0.1).setSeed((int) (seed + 3)).build();
 
 	@Override
-	public int getHeight(int x, int z, int biomeId, MutLong data) {
+	public int getHeight(int x, int z, int biomeId) {
 		return (int) (65 + noise.getNoise(x,z) * 4 + Math.abs(noise2.getNoise(x,z)) * 3);
-	}
-
-	@Override
-	public int generate(ChunkBatch batch, int x, int z, int height, int chunkX, int chunkZ, int biomeId, ChunkRandom rng, MutLong data, int genStructures) {
-		for (int i = 0; i < height; i++) {
-			batch.setBlock(x, i, z, Block.DIRT);
-		}
-		if (height > 63) {
-			batch.setBlock(x, height, z, Block.GRASS_BLOCK);
-			if (flowers.getNoise(x, z) + 1 < 0.4 && rng.nextFloat() < 0.5) {
-				batch.setBlock(x, height + 1, z, Block.DANDELION);
-			} else if (rng.nextFloat() < 0.04) {
-				batch.setBlock(x, height + 1, z, Block.GRASS);
-			}
-		} else {
-			batch.setBlock(x, height, z, Block.DIRT);
-			for (int i = height+1; i <= 64; i++) {
-				batch.setBlock(x, i, z, Block.WATER);
-			}
-		}
-		return genStructures | GENERATE_STRUCTURES;
 	}
 
 }
