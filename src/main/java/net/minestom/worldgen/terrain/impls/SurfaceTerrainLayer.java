@@ -14,7 +14,7 @@ public class SurfaceTerrainLayer extends TerrainLayer {
 
     @Override
     protected int genTerrain(int x, int z, int genStructures, Column column, ChunkRandom r, TerrainThreadContext threadContext) {
-        parent.genTerrain(x, z, genStructures, column, threadContext);
+        genStructures = parent.genTerrain(x, z, genStructures, column, threadContext);
         ChunkRandom rng = new ChunkRandom(r.nextInt(Integer.MAX_VALUE), wg.getSeed());
         rng.initChunkSeed(x/16, z/16);
         return column.getBiome().buildSurface(x, z, genStructures, column.getBiomeId(), column, rng, threadContext);

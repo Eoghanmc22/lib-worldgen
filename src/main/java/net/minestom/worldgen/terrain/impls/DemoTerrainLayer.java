@@ -14,7 +14,7 @@ public class DemoTerrainLayer extends TerrainLayer {
 
     @Override
     protected int genTerrain(int x, int z, int genStructures, Column column, ChunkRandom r, TerrainThreadContext threadContext) {
-        parent.genTerrain(x, z, genStructures, column, threadContext);
+        genStructures = parent.genTerrain(x, z, genStructures, column, threadContext);
         for (int y = 0; y <= (int) column.getHeightMap(); y++) {
             column.setBlock(Block.STONE, y);
         }
