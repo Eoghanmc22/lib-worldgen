@@ -29,16 +29,16 @@ public abstract class PlaceableFeature {
 						!(rZ + zRadius >= 16 || rZ - zRadius < 0);
 	}
 
-	public boolean place(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ) {
+	public boolean place(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ, int biomeId) {
 		boolean fits = fits(x, y, z);
 		if (fits) {
-			place0(wg, x, y, z, chunkX, chunkZ);
+			place0(wg, x, y, z, chunkX, chunkZ, biomeId);
 		} else {
 			GenerationFuture future = new GenerationFuture(wg, getPersistentId());
-			future.setAll(x, y, z, chunkX, chunkZ);
+			future.setAll(x, y, z, chunkX, chunkZ, biomeId);
 
 			final HashMap<ChunkPos, HashMap<SimpleBlockPosition, SimpleBlockData>> data = generate(x, z, chunkX, chunkZ,
-					new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16)).getData();
+					new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16), biomeId).getData();
 			future.setNeededChunks(new ArrayList<>(data.keySet()));
 			if (!future.runFuture()) {
 				wg.getFutureManager().putFuture(future);
@@ -48,12 +48,12 @@ public abstract class PlaceableFeature {
 		return fits;
 	}
 
-	public void place0(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ) {
-		Batch batch = generate(x, z, chunkX, chunkZ, new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16));
+	public void place0(WorldGen wg, int x, int y, int z, int chunkX, int chunkZ, int biomeId) {
+		Batch batch = generate(x, z, chunkX, chunkZ, new BlockPosition(x + chunkX * 16, y, z + chunkZ * 16), biomeId);
 		batch.apply(wg);
 	}
 
-	private Batch generate(int rX, int rZ, int chunkX, int chunkZ, BlockPosition offset) {
+	private Batch generate(int rX, int rZ, int chunkX, int chunkZ, BlockPosition offset, int biomeId) {
 		ChunkRandom rng = new ChunkRandom(342354, 45452);
 		rng.initChunkSeed(chunkX* 16L + rX, chunkZ* 16L + rZ);
 		Batch batch = new Batch(offset);

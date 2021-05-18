@@ -5,13 +5,16 @@ import net.minestom.server.event.instance.InstanceChunkLoadEvent;
 import net.minestom.server.instance.ChunkGenerator;
 import net.minestom.server.instance.InstanceContainer;
 import net.minestom.server.utils.time.TimeUnit;
+import net.minestom.worldgen.biomegen.impls.BaseBiomeLayer;
 import net.minestom.worldgen.biomes.BiomeConfig;
 import net.minestom.worldgen.biomes.BiomeGroup;
 import net.minestom.worldgen.features.PlaceableFeature;
 import net.minestom.worldgen.futures.FutureManager;
 import net.minestom.worldgen.biomegen.BiomeLayer;
 import net.minestom.worldgen.heightmap.HeightMapLayer;
+import net.minestom.worldgen.heightmap.impls.BaseHeightMapLayer;
 import net.minestom.worldgen.terrain.TerrainLayer;
+import net.minestom.worldgen.terrain.impls.BaseTerrainLayer;
 import net.minestom.worldgenUtils.ChunkPos;
 import net.minestom.worldgenUtils.Context;
 
@@ -24,6 +27,11 @@ public class WorldGen implements Context {
 	private final LinkedList<BiomeLayer> biomeLayers = new LinkedList<>();
 	private final LinkedList<HeightMapLayer> heightMapLayers = new LinkedList<>();
 	private final LinkedList<TerrainLayer> terrainLayers = new LinkedList<>();
+	{
+		biomeLayers.add(new BaseBiomeLayer(this));
+		heightMapLayers.add(new BaseHeightMapLayer(this));
+		terrainLayers.add(new BaseTerrainLayer(this));
+	}
 	private final List<BiomeGroup> biomeGroups = new ArrayList<>();
 	private final BiomeGroup reservedGroup = new BiomeGroup();
 	private final InstanceContainer instance;
@@ -42,8 +50,8 @@ public class WorldGen implements Context {
 		for (final BiomeGroup bg : biomeGroups) {
 			for (final BiomeConfig bc : bg.getBiomes()) {
 				for (final PlaceableFeature feature : bc.getFeatures()) {
-					getFutureManager().registerGeneratable(feature.getPersistentId(), (future, wg, rX, rY, rZ, chunkX, chunkZ) -> {
-						feature.place0(wg, rX, rY, rZ, chunkX, chunkZ);
+					getFutureManager().registerGeneratable(feature.getPersistentId(), (future, wg, rX, rY, rZ, chunkX, chunkZ, biomeId) -> {
+						feature.place0(wg, rX, rY, rZ, chunkX, chunkZ, biomeId);
 						future.done();
 					});
 				}

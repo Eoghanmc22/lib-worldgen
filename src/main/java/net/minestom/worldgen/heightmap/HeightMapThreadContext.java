@@ -1,11 +1,14 @@
 package net.minestom.worldgen.heightmap;
 
 import net.minestom.worldgen.biomegen.BiomeThreadContext;
+import net.minestom.worldgen.biomes.BiomeConfig;
 
 public final class HeightMapThreadContext {
 
 	public final BiomeThreadContext biomeCtx;
 	public final HeightMapCache[] cache;
+	public int biomeId = 0;
+	public BiomeConfig biome = null;
 
 	public HeightMapThreadContext(final BiomeThreadContext biomeCtx, final int layers) {
 		this.biomeCtx = biomeCtx;

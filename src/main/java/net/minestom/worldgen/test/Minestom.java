@@ -62,7 +62,6 @@ public class Minestom {
 		@Override
 		public void addBiomeLayers(WorldGen wg) {
 			long i = 2000;
-			wg.addBiomeLayer(new BaseBiomeLayer(wg));
 			wg.addBiomeLayer(new LandBiomeLayer(wg, i++, 1f));
 			wg.addBiomeLayer(new BiomeGroupBiomeLayer(wg, i++));
 			wg.addBiomeLayer(new ZoomBiomeLayer(wg, i++));

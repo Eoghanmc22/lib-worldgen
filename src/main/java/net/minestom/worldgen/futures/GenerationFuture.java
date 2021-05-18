@@ -17,7 +17,7 @@ public class GenerationFuture {
 	private final SerializableData data;
 	private final String persistentRunnableId;
 	private int state = -1;
-	private int rX, rY, rZ, chunkX, chunkZ;
+	private int rX, rY, rZ, chunkX, chunkZ, biomeId;
 
 	public GenerationFuture(WorldGen wg, SerializableData data, String persistentRunnableId) {
 		this.futureManager = wg.getFutureManager();
@@ -46,6 +46,7 @@ public class GenerationFuture {
 		rZ = serializedData.get("rZ");
 		chunkX = serializedData.get("chunkX");
 		chunkZ = serializedData.get("chunkZ");
+		biomeId = serializedData.get("biomeId");
 	}
 
 	public boolean runFuture() {
@@ -65,7 +66,7 @@ public class GenerationFuture {
 	private void run() {
 		final Generatable runnable = getFutureManager().getGeneratable(persistentRunnableId);
 		if (runnable != null && state != 0) {
-			runnable.generate(this, futureManager.getWg(), rX, rY, rZ, chunkX, chunkZ);
+			runnable.generate(this, futureManager.getWg(), rX, rY, rZ, chunkX, chunkZ, biomeId);
 			if (state == -1) {
 				throw new RuntimeException("Runnable never updated the futures state. You need to call 'done' or 'incomplete' at the end of a future");
 			}
@@ -116,15 +117,17 @@ public class GenerationFuture {
 		serialized.set("rZ", rZ);
 		serialized.set("chunkX", chunkX);
 		serialized.set("chunkZ", chunkZ);
+		serialized.set("biomeId", biomeId);
 		return serialized;
 	}
 
-	public void setAll(int rX, int rY, int rZ, int chunkX, int chunkZ) {
+	public void setAll(int rX, int rY, int rZ, int chunkX, int chunkZ, int biomeId) {
 		this.rX = rX;
 		this.rY = rY;
 		this.rZ = rZ;
 		this.chunkX = chunkX;
 		this.chunkZ = chunkZ;
+		this.biomeId = biomeId;
 	}
 
 	public void setrX(int rX) {
@@ -147,4 +150,7 @@ public class GenerationFuture {
 		this.chunkZ = chunkZ;
 	}
 
+	public void setBiomeId(int biomeId) {
+		this.biomeId = biomeId;
+	}
 }

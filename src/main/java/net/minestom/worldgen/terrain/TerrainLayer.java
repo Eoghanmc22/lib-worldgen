@@ -24,11 +24,11 @@ public abstract class TerrainLayer {
 			this.parent = null;
 	}
 
-	public final int genTerrain(final int x, final int z, final int height, final int genStructures, final Column column, final TerrainThreadContext threadContext) {
-		return genTerrain(x, z, column, new ChunkRandom(baseSeed, worldSeed), threadContext);
+	public final int genTerrain(final int x, final int z, final int genStructures, final Column column, final TerrainThreadContext threadContext) {
+		return genTerrain(x, z, genStructures, column, new ChunkRandom(baseSeed, worldSeed), threadContext);
 	}
 
-	protected abstract int genTerrain(int x, int z, final Column column, final ChunkRandom r, final TerrainThreadContext threadContext);
+	protected abstract int genTerrain(int x, int z, final int genStructures, final Column column, final ChunkRandom r, final TerrainThreadContext threadContext);
 
 	private void initWorldGenSeed(final long worldSeed) {
 		if (parent != null)

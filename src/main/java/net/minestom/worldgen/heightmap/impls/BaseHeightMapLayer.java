@@ -16,6 +16,8 @@ public class BaseHeightMapLayer extends HeightMapLayer {
     protected double genHeight(final int x, final int z, final ChunkRandom r, final HeightMapThreadContext threadContext) {
         int id = wg.getBiomeLayers().getLast().genBiomes(x, z, threadContext.biomeCtx);
         BiomeConfig biome = wg.getBiomeGroup(BiomeLayer.getClimate(id)).getBiome(BiomeLayer.getBiomeId(id));
+        threadContext.biomeId = id;
+        threadContext.biome = biome;
         return biome.getHeight(x, z, id);
     }
 }
